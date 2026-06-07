@@ -12,10 +12,9 @@
 
     <!-- MESIN ARCADE -->
     <div class="arcade-machine">
-        <!-- Bagian atas kabinet (layar) -->
+        <!-- Layar -->
         <div class="arcade-screen">
             <div class="game-console" id="gameConsole">
-                <div class="crt-overlay"></div>
                 <div class="particle-container" id="particleContainer"></div>
 
                 <header class="game-header">
@@ -27,15 +26,15 @@
 
                 <div class="stats-bar">
                     <div class="stat-item">
-                        <span class="stat-label">Win Streak</span>
+                        <span class="stat-label">STREAK</span>
                         <span class="stat-value" id="winStreak">0</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Menang</span>
+                        <span class="stat-label">MENANG</span>
                         <span class="stat-value win" id="totalWins">0</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Kalah</span>
+                        <span class="stat-label">KALAH</span>
                         <span class="stat-value lose" id="totalLosses">0</span>
                     </div>
                 </div>
@@ -60,15 +59,49 @@
                     <div class="stick-ball"></div>
                 </div>
 
-                <!-- Area input & tombol -->
-                <div class="control-input-area">
-                    <input type="text" id="guessInput" class="guess-input" placeholder="KETIK..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="6">
+                <!-- Keyboard virtual -->
+                <div class="virtual-keyboard" id="virtualKeyboard">
+                    <!-- Baris 1 -->
+                    <div class="keyboard-row">
+                        <button class="key-btn" data-key="q">Q</button>
+                        <button class="key-btn" data-key="w">W</button>
+                        <button class="key-btn" data-key="e">E</button>
+                        <button class="key-btn" data-key="r">R</button>
+                        <button class="key-btn" data-key="t">T</button>
+                        <button class="key-btn" data-key="y">Y</button>
+                        <button class="key-btn" data-key="u">U</button>
+                        <button class="key-btn" data-key="i">I</button>
+                        <button class="key-btn" data-key="o">O</button>
+                        <button class="key-btn" data-key="p">P</button>
+                    </div>
+                    <!-- Baris 2 -->
+                    <div class="keyboard-row">
+                        <button class="key-btn" data-key="a">A</button>
+                        <button class="key-btn" data-key="s">S</button>
+                        <button class="key-btn" data-key="d">D</button>
+                        <button class="key-btn" data-key="f">F</button>
+                        <button class="key-btn" data-key="g">G</button>
+                        <button class="key-btn" data-key="h">H</button>
+                        <button class="key-btn" data-key="j">J</button>
+                        <button class="key-btn" data-key="k">K</button>
+                        <button class="key-btn" data-key="l">L</button>
+                    </div>
+                    <!-- Baris 3 -->
+                    <div class="keyboard-row">
+                        <button class="key-btn wide" data-key="backspace">⌫</button>
+                        <button class="key-btn" data-key="z">Z</button>
+                        <button class="key-btn" data-key="x">X</button>
+                        <button class="key-btn" data-key="c">C</button>
+                        <button class="key-btn" data-key="v">V</button>
+                        <button class="key-btn" data-key="b">B</button>
+                        <button class="key-btn" data-key="n">N</button>
+                        <button class="key-btn" data-key="m">M</button>
+                        <button class="key-btn wide" data-key="enter">↵</button>
+                    </div>
                 </div>
 
-                <div class="control-buttons">
-                    <button id="guessBtn" class="arcade-btn btn-tebak">
-                        <span>▶ TEBak</span>
-                    </button>
+                <!-- Tombol aksi tambahan (hint & restart) -->
+                <div class="action-buttons">
                     <button id="hintBtn" class="arcade-btn btn-hint" title="Petunjuk (1x)">
                         <span>💡<span class="hint-count" id="hintCount">1</span></span>
                     </button>
@@ -77,8 +110,9 @@
                     </button>
                 </div>
 
+                <!-- Nyawa -->
                 <div class="chances-display">
-                    <span class="chances-label">NYAWA:</span>
+                    <span class="chances-label">NYAWA</span>
                     <span class="chances-dots" id="chancesDots"></span>
                 </div>
             </div>
