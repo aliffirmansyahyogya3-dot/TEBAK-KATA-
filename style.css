@@ -1,18 +1,18 @@
 /* =============================================
-   TEBAK KATA PIXEL - STYLE (MOBILE FRIENDLY)
+   TEBAK KATA ARCADE - STYLE
+   Tema Mesin Arcade Retro + CRT + Joystick
    ============================================= */
 
 :root {
-  --pixel-green: #6f6;
-  --pixel-dark: #0a0a0a;
-  --pixel-bg: #111;
-  --pixel-border: #333;
-  --color-correct: #6aaa64;
-  --color-present: #c9b458;
-  --color-absent: #787c7e;
+  --neon-pink: #ff00ff;
+  --neon-cyan: #00ffff;
+  --neon-yellow: #ffff00;
+  --neon-green: #6f6;
+  --arcade-bg: #0a0010;
+  --cabinet-border: #2a0040;
+  --panel-metal: #1a1a2e;
   --font-pixel: 'Press Start 2P', cursive;
   --board-tile-size: clamp(36px, 10vw, 55px);
-  --gap-size: 5px;
 }
 
 * {
@@ -22,7 +22,7 @@
 }
 
 body {
-  background: #0a0a0a;
+  background: #000005;
   font-family: var(--font-pixel);
   display: flex;
   justify-content: center;
@@ -30,10 +30,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
-  padding: 10px;
 }
 
-/* Background bintang bergerak */
 .stars-container {
   position: fixed;
   top: 0;
@@ -48,44 +46,87 @@ body {
   position: absolute;
   background: white;
   border-radius: 50%;
-  opacity: 0.7;
+  opacity: 0.5;
   animation: twinkle 3s infinite alternate, drift 20s linear infinite;
 }
 
 @keyframes twinkle {
-  0% { opacity: 0.3; transform: scale(1); }
-  100% { opacity: 1; transform: scale(1.5); }
+  0% { opacity: 0.2; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.5); }
 }
 
 @keyframes drift {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-30px); }
+  100% { transform: translateY(-20px); }
 }
 
-.game-wrapper {
+/* ========== MESIN ARCADE ========== */
+.arcade-machine {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+  width: 95%;
+  max-width: 520px;
+  background: #1a0a2e;
+  border: 10px solid #3a1a5e;
+  border-radius: 20px 20px 10px 10px;
+  box-shadow:
+    0 0 30px var(--neon-pink),
+    0 0 60px var(--neon-cyan),
+    inset 0 0 20px rgba(255,255,255,0.05);
+  margin: 20px auto;
+  padding: 15px 10px;
+  background: linear-gradient(180deg, #1e0f2e 0%, #0d0520 100%);
+}
+
+/* Layar CRT */
+.arcade-screen {
+  background: #000;
+  border: 8px solid #222;
+  border-radius: 15px;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-shadow:
+    inset 0 0 30px rgba(0, 255, 255, 0.3),
+    0 0 15px var(--neon-cyan);
+  position: relative;
 }
 
 .game-console {
-  background: #1a1a2e;
-  border: 4px solid #4a4a6a;
-  border-radius: 12px;
-  padding: 20px 12px;
-  box-shadow: 0 0 20px rgba(110, 255, 110, 0.3), inset 0 0 15px rgba(0,0,0,0.8);
+  background: #0a0a12;
+  border: 3px solid #333;
+  border-radius: 10px;
+  padding: 15px 10px;
   position: relative;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
 }
 
+/* Efek CRT scanline (selalu aktif) */
+.crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.15) 0px,
+    rgba(0,0,0,0.15) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  opacity: 1;
+  border-radius: 8px;
+}
+
+/* Header game */
 .game-header {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .game-title {
-  font-size: clamp(1rem, 5vw, 1.6rem);
   display: flex;
   justify-content: center;
   gap: 8px;
@@ -93,82 +134,82 @@ body {
 }
 
 .title-pixel {
-  background: #111;
+  background: #000;
   padding: 5px 10px;
-  border: 3px solid var(--pixel-green);
-  color: var(--pixel-green);
-  letter-spacing: 2px;
-  text-shadow: 0 0 8px currentColor;
+  border: 3px solid var(--neon-pink);
+  color: var(--neon-pink);
+  text-shadow: 0 0 8px var(--neon-pink);
   box-shadow: 4px 4px 0 #000;
-  font-size: 0.9em;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
 }
 
 .title-pixel.accent {
-  background: var(--pixel-green);
+  background: var(--neon-cyan);
   color: #000;
-  border-color: #fff;
+  border-color: white;
   text-shadow: none;
 }
 
+/* Statistik */
 .stats-bar {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 12px;
-  font-size: 0.55rem;
-  gap: 5px;
+  margin-bottom: 10px;
+  font-size: 0.5rem;
+  gap: 4px;
 }
 
 .stat-item {
-  text-align: center;
   background: #000;
-  padding: 6px 5px;
-  border: 2px solid #444;
+  padding: 5px 4px;
+  border: 2px solid var(--neon-pink);
+  text-align: center;
+  color: var(--neon-pink);
   flex: 1;
-  min-width: 0;
 }
 
 .stat-label {
   display: block;
-  font-size: 0.45rem;
+  font-size: 0.4rem;
   color: #aaa;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .stat-value {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: bold;
   color: white;
 }
 
-.stat-value.win { color: var(--color-correct); }
-.stat-value.lose { color: #e06c75; }
+.stat-value.win { color: var(--neon-green); }
+.stat-value.lose { color: #ff4444; }
 
+/* Hint display */
 .hint-display {
   background: #000;
-  border: 2px dashed var(--color-present);
+  border: 2px dashed var(--neon-yellow);
   padding: 6px;
-  margin: 0 0 12px;
-  font-size: 0.55rem;
-  color: var(--color-present);
+  margin-bottom: 10px;
+  font-size: 0.5rem;
+  color: var(--neon-yellow);
   text-align: center;
   display: none;
 }
+.hint-display.active { display: block; }
 
-.hint-display.active {
-  display: block;
-}
-
+/* Game board */
 .game-board {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--gap-size);
-  margin-bottom: 15px;
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
 .row {
   display: flex;
-  gap: var(--gap-size);
+  gap: 5px;
 }
 
 .tile {
@@ -183,50 +224,36 @@ body {
   font-weight: bold;
   color: white;
   text-transform: uppercase;
-  transition: transform 0.4s ease, background-color 0.2s, border-color 0.2s;
-  transform-style: preserve-3d;
-  position: relative;
-  box-shadow: inset 0 0 5px rgba(0,0,0,0.7);
+  transition: transform 0.4s, background-color 0.2s, border-color 0.2s;
+  box-shadow: 0 0 5px rgba(255,0,255,0.3);
 }
 
-/* ... sisa style animasi dan warna sama seperti sebelumnya ... */
-.tile.flip {
-  animation: flipIn 0.5s ease forwards;
-}
-
+/* ... (animasi flip, correct, present, absent sama seperti sebelumnya) ... */
+.tile.flip { animation: flipIn 0.5s ease forwards; }
 @keyframes flipIn {
   0% { transform: rotateX(0deg); }
   50% { transform: rotateX(90deg); }
   100% { transform: rotateX(0deg); }
 }
-
 .tile.correct {
-  background: var(--color-correct);
+  background: #6aaa64;
   border-color: #5a8f4a;
-  color: white;
+  box-shadow: 0 0 15px #6aaa64;
 }
-
 .tile.present {
-  background: var(--color-present);
+  background: #c9b458;
   border-color: #b59f3b;
-  color: white;
+  box-shadow: 0 0 10px #c9b458;
 }
-
 .tile.absent {
-  background: var(--color-absent);
+  background: #787c7e;
   border-color: #5a5e61;
-  color: white;
 }
-
 .row.current .tile {
-  border-color: var(--pixel-green);
-  box-shadow: 0 0 8px var(--pixel-green);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px var(--neon-cyan);
 }
-
-.row.shake {
-  animation: shake 0.4s ease;
-}
-
+.row.shake { animation: shake 0.4s ease; }
 @keyframes shake {
   0%,100% { transform: translateX(0); }
   20% { transform: translateX(-8px); }
@@ -236,108 +263,158 @@ body {
 }
 
 .message-area {
-  font-size: 0.55rem;
-  color: #ff6b6b;
+  font-size: 0.5rem;
+  color: #ff4444;
   text-align: center;
-  min-height: 20px;
-  margin-bottom: 8px;
+  min-height: 15px;
 }
 
-.input-area {
+/* ========== PANEL KONTROL ARCADE ========== */
+.arcade-controls {
+  background: #1a0a2e;
+  border: 4px solid #3a1a5e;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(255,0,255,0.5);
+}
+
+.control-panel {
   display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 12px;
+  align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Joystick dekoratif */
+.joystick {
+  position: relative;
+  width: 60px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stick-base {
+  width: 50px;
+  height: 15px;
+  background: #333;
+  border-radius: 50%;
+  box-shadow: 0 4px 0 #111;
+}
+
+.stick-shaft {
+  width: 10px;
+  height: 30px;
+  background: #666;
+  margin-top: -5px;
+}
+
+.stick-ball {
+  width: 25px;
+  height: 25px;
+  background: #ff0066;
+  border-radius: 50%;
+  margin-top: -10px;
+  box-shadow: 0 0 15px #ff0066, 0 4px 0 #990033;
+}
+
+/* Input area */
+.control-input-area {
+  flex: 1;
+  min-width: 120px;
 }
 
 .guess-input {
+  width: 100%;
   background: #000;
-  border: 3px solid #555;
-  color: var(--pixel-green);
+  border: 3px solid var(--neon-cyan);
+  color: var(--neon-cyan);
   font-family: var(--font-pixel);
-  font-size: 0.75rem;
-  padding: 8px 10px;
-  width: 130px;
+  font-size: 0.7rem;
+  padding: 10px;
   text-align: center;
   letter-spacing: 3px;
   outline: none;
-  text-transform: lowercase;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px var(--neon-cyan);
 }
 
 .guess-input:focus {
-  border-color: var(--pixel-green);
-  box-shadow: 0 0 10px var(--pixel-green);
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 15px var(--neon-pink);
 }
 
-.btn {
+/* Tombol arcade bulat */
+.control-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.arcade-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 4px solid #fff;
   font-family: var(--font-pixel);
-  font-size: 0.65rem;
-  padding: 8px 12px;
-  border: 3px solid #555;
-  background: #222;
+  font-size: 0.55rem;
+  font-weight: bold;
   color: white;
   cursor: pointer;
+  box-shadow: 0 6px 0 #111, 0 0 15px currentColor;
+  transition: all 0.1s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
-  transition: all 0.1s ease;
-  box-shadow: 3px 3px 0 #000;
-  white-space: nowrap;
+  justify-content: center;
+  text-transform: uppercase;
 }
 
-.btn:hover {
-  background: #333;
-  border-color: var(--pixel-green);
-  transform: translate(1px, 1px);
-  box-shadow: 2px 2px 0 #000;
-}
-
-.btn:active {
-  transform: translate(3px, 3px);
-  box-shadow: none;
+.arcade-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #111, 0 0 20px currentColor;
 }
 
 .btn-tebak {
-  background: #1a4d1a;
-  border-color: var(--pixel-green);
-  color: var(--pixel-green);
+  background: #00aa44;
+  border-color: #00ff66;
+  color: white;
 }
 
-.btn-tebak:hover {
-  background: #2a6d2a;
+.btn-hint {
+  background: #ffaa00;
+  border-color: #ffdd44;
+  color: black;
 }
 
-.action-bar {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.btn-hint, .btn-restart {
-  font-size: 1.1rem;
-  padding: 5px 10px;
-  min-width: 45px;
-  justify-content: center;
+.btn-restart {
+  background: #cc3333;
+  border-color: #ff6666;
+  color: white;
 }
 
 .hint-count {
   font-size: 0.6rem;
   background: black;
-  padding: 2px 4px;
+  color: white;
+  padding: 1px 3px;
   border-radius: 2px;
+  margin-left: 2px;
 }
 
+/* Nyawa/kesempatan */
 .chances-display {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 8px;
-  font-size: 0.6rem;
-  color: #aaa;
-  margin-top: 5px;
-  flex-wrap: wrap;
+  font-size: 0.55rem;
+  color: var(--neon-yellow);
+}
+
+.chances-label {
+  color: var(--neon-pink);
+  text-shadow: 0 0 5px var(--neon-pink);
 }
 
 .chances-dots {
@@ -346,11 +423,11 @@ body {
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
-  background: var(--pixel-green);
-  border-radius: 2px;
-  box-shadow: 0 0 4px var(--pixel-green);
+  width: 12px;
+  height: 12px;
+  background: var(--neon-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--neon-green);
 }
 
 .dot.empty {
@@ -358,14 +435,12 @@ body {
   box-shadow: none;
 }
 
-/* Popup */
+/* ========== POPUP ========== */
 .popup-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -373,118 +448,88 @@ body {
   visibility: hidden;
   opacity: 0;
   transition: 0.3s;
-  padding: 20px;
 }
-
 .popup-overlay.active {
   visibility: visible;
   opacity: 1;
 }
-
 .popup-overlay.active .popup {
   animation: popIn 0.4s ease forwards;
 }
-
 @keyframes popIn {
   0% { transform: scale(0.7); opacity: 0; }
   70% { transform: scale(1.05); }
   100% { transform: scale(1); opacity: 1; }
 }
-
 .popup {
-  background: #1a1a2e;
-  border: 4px solid var(--pixel-green);
-  padding: 20px;
+  background: #1a0a2e;
+  border: 6px solid var(--neon-pink);
+  padding: 25px;
   text-align: center;
-  max-width: 300px;
-  width: 100%;
+  max-width: 320px;
+  width: 90%;
   color: white;
-  box-shadow: 0 0 30px var(--pixel-green);
+  box-shadow: 0 0 40px var(--neon-pink), 0 0 80px var(--neon-cyan);
 }
-
-.popup.win {
-  border-color: var(--pixel-green);
-  box-shadow: 0 0 30px var(--pixel-green), 0 0 60px rgba(110, 255, 110, 0.5);
-}
-
-.popup.lose {
-  border-color: #e06c75;
-  box-shadow: 0 0 30px #e06c75, 0 0 60px rgba(224, 108, 117, 0.5);
-}
-
-.popup-icon {
-  font-size: 2rem;
-  margin-bottom: 8px;
-}
-
-.popup-title {
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-}
-
-.popup.lose .popup-title {
-  color: #e06c75;
-}
-
-.popup-message {
-  font-size: 0.65rem;
-  margin: 8px 0;
-}
-
+.popup.win { border-color: var(--neon-green); }
+.popup.lose { border-color: #ff4444; }
+.popup-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.popup-title { font-size: 0.9rem; margin-bottom: 10px; }
+.popup.lose .popup-title { color: #ff4444; }
+.popup-message { font-size: 0.6rem; margin: 8px 0; }
 .popup-answer {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   background: #000;
   padding: 6px;
-  margin: 8px 0;
+  margin: 10px 0;
   letter-spacing: 3px;
-  color: var(--color-present);
+  color: var(--neon-yellow);
 }
-
 .btn-popup {
-  margin: 12px auto 0;
+  margin: 15px auto 0;
+  padding: 10px 20px;
+  background: #222;
+  border: 3px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 0 15px var(--neon-cyan);
 }
 
 /* Partikel */
 .particle-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   pointer-events: none;
   z-index: 5;
 }
-
 .particle {
   position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--pixel-green);
-  box-shadow: 0 0 6px currentColor;
+  width: 6px; height: 6px;
+  background: var(--neon-pink);
+  box-shadow: 0 0 8px currentColor;
   animation: particleFade 1s ease-out forwards;
 }
-
 .particle.large {
-  width: 12px;
-  height: 12px;
+  width: 14px; height: 14px;
 }
-
 @keyframes particleFade {
   0% { transform: translate(0,0) scale(1); opacity: 1; }
   100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
 }
 
-/* Responsif tambahan */
-@media (max-width: 400px) {
-  .game-console {
-    padding: 15px 8px;
+/* Responsive */
+@media (max-width: 450px) {
+  .arcade-btn {
+    width: 45px; height: 45px;
+    font-size: 0.5rem;
   }
-  .guess-input {
-    width: 110px;
-    font-size: 0.7rem;
+  .joystick {
+    width: 50px; height: 65px;
   }
-  .btn {
-    padding: 6px 10px;
-    font-size: 0.6rem;
+  .stick-ball {
+    width: 22px; height: 22px;
   }
 }
