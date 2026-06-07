@@ -1,15 +1,13 @@
 // =============================================
-// TEBAK KATA PIXEL - SCRIPT (FINAL ENHANCED)
-// 100+ Kosakata, Musik Autoplay, Fix Reset
+// TEBAK KATA PIXEL - SCRIPT (FIXED RESTART MUSIC)
+// 100+ Kosakata, Musik tetap jalan saat restart
 // =============================================
 
 const WORD_LIST = [
-  // Daftar asli
   "kata", "pixel", "game", "retro", "warna", "tebak", "kunci", "layar",
   "musik", "pohon", "laptop", "kopi", "hujan", "buku", "daun", "bunga",
   "mobil", "pisang", "mangga", "kucing", "sandal", "topi", "baju",
   "roti", "susu", "meja", "kursi", "lampu", "awan", "bintang",
-  // Tambahan baru (100+ kata umum 4-6 huruf)
   "pintu", "makan", "minum", "tidur", "jalan", "baca", "tulis", "gambar",
   "suara", "cahaya", "tanah", "air", "api", "angin", "hewan", "manusia",
   "rumah", "kamar", "dapur", "lemari", "piring", "gelas", "sendok", "garpu",
@@ -77,7 +75,7 @@ const chancesDots = document.getElementById('chancesDots');
 const particleContainer = document.getElementById('particleContainer');
 const starsContainer = document.getElementById('starsContainer');
 
-// ========== AUDIO SYSTEM (MP3 + Web Audio API) ==========
+// ========== AUDIO SYSTEM ==========
 let audioCtx = null;
 let bgmAudio = null;
 let audioInitialized = false;
@@ -85,31 +83,23 @@ let audioInitialized = false;
 function initAudio() {
   if (audioInitialized) return;
   try {
-    // Web Audio API untuk efek suara
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
-
-    // Musik latar dari file MP3
     bgmAudio = new Audio('morning_paper_tiles.mp3');
     bgmAudio.loop = true;
     bgmAudio.volume = 0.3;
-
     audioInitialized = true;
-
-    // Mulai musik otomatis setelah inisialisasi (website pribadi)
     startBackgroundMusic();
   } catch (e) {
     console.warn('Web Audio API tidak didukung');
   }
 }
 
-// Interaksi pertama akan memicu initAudio
 document.body.addEventListener('click', initAudio, { once: true });
 document.body.addEventListener('keydown', initAudio, { once: true });
 
-// Efek suara pendek (tetap)
 function playTone(freq, duration, type = 'square', gainValue = 0.15) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
@@ -145,7 +135,6 @@ function playLoseSound() {
   setTimeout(() => playTone(150, 0.4, 'sawtooth', 0.15), 200);
 }
 
-// Musik latar
 function startBackgroundMusic() {
   if (!bgmAudio) return;
   bgmAudio.currentTime = 0;
@@ -184,7 +173,7 @@ function updateStatsUI() {
 // ========== INISIALISASI GAME ==========
 function initGame() {
   clearWinIdle();
-  // Tidak lagi stopBackgroundMusic() di sini agar musik tidak ter-reset
+  // Musik tidak dihentikan saat init, hanya saat game over
   targetWord = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toLowerCase();
   attempts = [];
   currentRow = 0;
@@ -206,8 +195,6 @@ function initGame() {
   renderBoard();
   updateChancesDots();
   guessInput.focus();
-
-  // Musik akan tetap berjalan jika sudah pernah dimulai
 }
 
 function renderBoard() {
@@ -493,18 +480,25 @@ function useHint() {
   showMessage('Petunjuk digunakan!');
 }
 
-// ========== RESTART (MUSIK DIMULAI LAGI) ==========
+// ========== RESTART (TANPA STOP MUSIK KECUALI DARI GAME OVER) ==========
 function restartGame() {
   particleContainer.innerHTML = '';
   clearWinIdle();
-  // Hentikan musik dulu (biar restart dari awal)
-  stopBackgroundMusic();
   popupOverlay.classList.remove('active');
+  
+  // Hanya hentikan musik jika game sebelumnya benar-benar berakhir (menang/kalah)
+  // Saat restart manual lewat tombol restart, musik tetap berjalan
+  if (gameOver) {
+    stopBackgroundMusic();
+  }
+
   initGame();
-  // Mulai musik kembali
-  if (audioInitialized) {
+
+  // Mulai musik lagi hanya jika sebelumnya berhenti karena game over
+  if (gameOver && audioInitialized) {
     startBackgroundMusic();
   }
+  // Jika restart saat game belum selesai, musik tidak disentuh
 }
 
 // ========== BACKGROUND STARS ==========
