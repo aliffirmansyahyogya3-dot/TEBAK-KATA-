@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tebak Kata Pixel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stars-container" id="starsContainer"></div>
+
+    <div class="game-wrapper">
+        <div class="game-console" id="gameConsole">
+            <div class="crt-overlay" id="crtOverlay"></div>
+            <div class="particle-container" id="particleContainer"></div>
+
+            <header class="game-header">
+                <h1 class="game-title">
+                    <span class="title-pixel">TEBAK</span>
+                    <span class="title-pixel accent">KATA</span>
+                </h1>
+            </header>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-label">Win Streak</span>
+                    <span class="stat-value" id="winStreak">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Menang</span>
+                    <span class="stat-value win" id="totalWins">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Kalah</span>
+                    <span class="stat-value lose" id="totalLosses">0</span>
+                </div>
+            </div>
+
+            <div class="hint-display" id="hintDisplay">
+                <span class="hint-icon">💡</span>
+                <span class="hint-text" id="hintText"></span>
+            </div>
+
+            <div class="game-board" id="gameBoard"></div>
+            <div class="message-area" id="messageArea"></div>
+
+            <div class="input-area">
+                <input type="text" id="guessInput" class="guess-input" placeholder="Ketik..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="6">
+                <button id="guessBtn" class="btn btn-tebak">
+                    <span class="btn-text">Tebak</span>
+                    <span class="btn-icon">▶</span>
+                </button>
+            </div>
+
+            <div class="action-bar">
+                <button id="hintBtn" class="btn btn-hint" title="Petunjuk (1x)">
+                    <span>💡</span>
+                    <span class="hint-count" id="hintCount">1</span>
+                </button>
+                <button id="restartBtn" class="btn btn-restart" title="Restart Game">
+                    <span>↻</span>
+                </button>
+            </div>
+
+            <div class="chances-display">
+                <span>Sisa Kesempatan:</span>
+                <span class="chances-dots" id="chancesDots"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup" id="popup">
+            <div class="popup-icon" id="popupIcon"></div>
+            <h2 class="popup-title" id="popupTitle"></h2>
+            <p class="popup-message" id="popupMessage"></p>
+            <p class="popup-answer" id="popupAnswer"></p>
+            <button id="popupBtn" class="btn btn-popup">Main Lagi</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

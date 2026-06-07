@@ -1,0 +1,543 @@
+// =============================================
+// TEBAK KATA PIXEL - SCRIPT (FINAL ENHANCED)
+// Logika game, animasi, localStorage, Audio
+// =============================================
+
+const WORD_LIST = [
+  "kata", "pixel", "game", "retro", "warna", "tebak", "kunci", "layar",
+  "musik", "pohon", "laptop", "kopi", "hujan", "buku", "daun", "bunga",
+  "mobil", "pisang", "mangga", "kucing", "sandal", "topi", "baju",
+  "roti", "susu", "meja", "kursi", "lampu", "awan", "bintang"
+];
+
+const MAX_ATTEMPTS = 6;
+const STORAGE_KEY = 'tebakKataPixelStats';
+
+let targetWord = '';
+let attempts = [];
+let currentRow = 0;
+let gameOver = false;
+let win = false;
+let hintUsed = false;
+let hintData = null;
+let winIdleInterval = null;
+
+let stats = {
+  totalWins: 0,
+  totalLosses: 0,
+  winStreak: 0
+};
+
+const gameBoard = document.getElementById('gameBoard');
+const guessInput = document.getElementById('guessInput');
+const guessBtn = document.getElementById('guessBtn');
+const messageArea = document.getElementById('messageArea');
+const hintBtn = document.getElementById('hintBtn');
+const hintCountSpan = document.getElementById('hintCount');
+const hintDisplay = document.getElementById('hintDisplay');
+const hintText = document.getElementById('hintText');
+const restartBtn = document.getElementById('restartBtn');
+const popupOverlay = document.getElementById('popupOverlay');
+const popup = document.getElementById('popup');
+const popupIcon = document.getElementById('popupIcon');
+const popupTitle = document.getElementById('popupTitle');
+const popupMessage = document.getElementById('popupMessage');
+const popupAnswer = document.getElementById('popupAnswer');
+const popupBtn = document.getElementById('popupBtn');
+const winStreakSpan = document.getElementById('winStreak');
+const totalWinsSpan = document.getElementById('totalWins');
+const totalLossesSpan = document.getElementById('totalLosses');
+const chancesDots = document.getElementById('chancesDots');
+const particleContainer = document.getElementById('particleContainer');
+const starsContainer = document.getElementById('starsContainer');
+
+// ========== AUDIO SYSTEM ==========
+let audioCtx = null;
+let musicGain = null;
+let musicOscillators = [];
+let musicInterval = null;
+let audioInitialized = false;
+
+function initAudio() {
+  if (audioInitialized) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    musicGain = audioCtx.createGain();
+    musicGain.gain.value = 0.12;
+    musicGain.connect(audioCtx.destination);
+    audioInitialized = true;
+  } catch (e) {
+    console.warn('Web Audio API tidak didukung');
+  }
+}
+
+document.body.addEventListener('click', initAudio, { once: true });
+document.body.addEventListener('keydown', initAudio, { once: true });
+
+function playTone(freq, duration, type = 'square', gainValue = 0.15) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(gainValue, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(audioCtx.currentTime);
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function playKeyPressSound() {
+  playTone(800, 0.08, 'square', 0.1);
+}
+
+function playSubmitSound() {
+  playTone(600, 0.1, 'triangle', 0.2);
+  setTimeout(() => playTone(900, 0.1, 'triangle', 0.2), 50);
+}
+
+function playWinSound() {
+  const notes = [523, 659, 784, 1047];
+  notes.forEach((freq, i) => {
+    setTimeout(() => playTone(freq, 0.2, 'square', 0.2), i * 100);
+  });
+}
+
+function playLoseSound() {
+  playTone(200, 0.3, 'sawtooth', 0.15);
+  setTimeout(() => playTone(150, 0.4, 'sawtooth', 0.15), 200);
+}
+
+function startBackgroundMusic() {
+  if (!audioCtx || !musicGain) return;
+  stopBackgroundMusic();
+  const notes = [
+    262, 294, 330, 349, 392, 440, 494,
+    330, 349, 392, 440, 494, 523
+  ];
+  let index = 0;
+  const playNext = () => {
+    if (!audioCtx || !musicGain) return;
+    const freq = notes[index % notes.length];
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.9);
+    osc.connect(gain);
+    gain.connect(musicGain);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.9);
+    musicOscillators.push(osc);
+    index++;
+  };
+  musicInterval = setInterval(playNext, 1000);
+}
+
+function stopBackgroundMusic() {
+  if (musicInterval) {
+    clearInterval(musicInterval);
+    musicInterval = null;
+  }
+  musicOscillators.forEach(osc => { try { osc.stop(); } catch(e) {} });
+  musicOscillators = [];
+}
+
+// ========== STATISTIK ==========
+function loadStats() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      stats = { ...stats, ...parsed };
+    } catch (e) {}
+  }
+  updateStatsUI();
+}
+
+function saveStats() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+}
+
+function updateStatsUI() {
+  winStreakSpan.textContent = stats.winStreak;
+  totalWinsSpan.textContent = stats.totalWins;
+  totalLossesSpan.textContent = stats.totalLosses;
+}
+
+// ========== INISIALISASI GAME ==========
+function initGame() {
+  clearWinIdle();
+  stopBackgroundMusic();
+  targetWord = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toLowerCase();
+  attempts = [];
+  currentRow = 0;
+  gameOver = false;
+  win = false;
+  hintUsed = false;
+  hintData = null;
+
+  guessInput.disabled = false;
+  guessBtn.disabled = false;
+  messageArea.textContent = '';
+  hintDisplay.classList.remove('active');
+  hintText.textContent = '';
+  hintCountSpan.textContent = '1';
+  hintBtn.disabled = false;
+  guessInput.value = '';
+  guessInput.maxLength = targetWord.length;
+
+  renderBoard();
+  updateChancesDots();
+  guessInput.focus();
+
+  if (audioInitialized) {
+    startBackgroundMusic();
+  }
+}
+
+function renderBoard() {
+  gameBoard.innerHTML = '';
+  for (let r = 0; r < MAX_ATTEMPTS; r++) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    if (r === currentRow && !gameOver) row.classList.add('current');
+    row.dataset.row = r;
+
+    for (let c = 0; c < targetWord.length; c++) {
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.dataset.col = c;
+      if (r < attempts.length) {
+        tile.textContent = attempts[r][c] || '';
+      }
+      row.appendChild(tile);
+    }
+    gameBoard.appendChild(row);
+  }
+}
+
+function updateChancesDots() {
+  let dotsHTML = '';
+  const remaining = MAX_ATTEMPTS - currentRow;
+  for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    dotsHTML += `<span class="dot${i >= remaining ? ' empty' : ''}"></span>`;
+  }
+  chancesDots.innerHTML = dotsHTML;
+}
+
+// ========== PROSES TEBAKAN ==========
+function submitGuess() {
+  if (gameOver) return;
+  const guess = guessInput.value.trim().toLowerCase();
+
+  if (guess.length !== targetWord.length) {
+    showMessage('Panjang kata harus ' + targetWord.length + ' huruf');
+    shakeCurrentRow();
+    return;
+  }
+
+  playSubmitSound();
+
+  attempts.push(guess);
+
+  const currentRowEl = document.querySelector(`.row[data-row='${currentRow}']`);
+  if (currentRowEl) {
+    const tiles = currentRowEl.querySelectorAll('.tile');
+    for (let i = 0; i < guess.length; i++) {
+      tiles[i].textContent = guess[i];
+    }
+    currentRowEl.classList.remove('current');
+  }
+
+  const colors = computeColors(guess, targetWord);
+  animateTiles(currentRowEl, colors, () => {
+    checkWinOrLose(guess);
+  });
+
+  guessInput.value = '';
+  messageArea.textContent = '';
+}
+
+function computeColors(guess, target) {
+  const result = Array(target.length).fill('absent');
+  const targetLetterCount = {};
+
+  for (let ch of target) {
+    targetLetterCount[ch] = (targetLetterCount[ch] || 0) + 1;
+  }
+
+  for (let i = 0; i < guess.length; i++) {
+    if (guess[i] === target[i]) {
+      result[i] = 'correct';
+      targetLetterCount[guess[i]]--;
+    }
+  }
+
+  for (let i = 0; i < guess.length; i++) {
+    if (result[i] === 'correct') continue;
+    if (targetLetterCount[guess[i]] && targetLetterCount[guess[i]] > 0) {
+      result[i] = 'present';
+      targetLetterCount[guess[i]]--;
+    }
+  }
+
+  return result;
+}
+
+function animateTiles(rowEl, colors, callback) {
+  if (!rowEl) {
+    callback();
+    return;
+  }
+  const tiles = rowEl.querySelectorAll('.tile');
+  let completed = 0;
+  const total = tiles.length;
+
+  tiles.forEach((tile, index) => {
+    setTimeout(() => {
+      tile.classList.add('flip');
+      setTimeout(() => {
+        tile.classList.add(colors[index]);
+        const onAnimEnd = () => {
+          completed++;
+          if (completed === total) callback();
+        };
+        tile.addEventListener('animationend', onAnimEnd, { once: true });
+        setTimeout(() => {
+          if (completed < total) {
+            completed = total;
+            callback();
+          }
+        }, 600);
+      }, 200);
+    }, index * 120);
+  });
+}
+
+function checkWinOrLose(guess) {
+  if (guess === targetWord) {
+    win = true;
+    gameOver = true;
+    stats.totalWins++;
+    stats.winStreak++;
+    saveStats();
+    updateStatsUI();
+    disableInput();
+    playWinSound();
+    spawnParticles(50);
+    startWinIdle();
+    setTimeout(() => showPopup(true), 800);
+  } else {
+    currentRow++;
+    updateChancesDots();
+
+    if (currentRow >= MAX_ATTEMPTS) {
+      gameOver = true;
+      stats.totalLosses++;
+      stats.winStreak = 0;
+      saveStats();
+      updateStatsUI();
+      disableInput();
+      playLoseSound();
+      stopBackgroundMusic();
+      setTimeout(() => showPopup(false), 500);
+    } else {
+      const nextRow = document.querySelector(`.row[data-row='${currentRow}']`);
+      if (nextRow) nextRow.classList.add('current');
+      guessInput.focus();
+    }
+  }
+}
+
+function disableInput() {
+  guessInput.disabled = true;
+  guessBtn.disabled = true;
+  hintBtn.disabled = true;
+}
+
+// ========== IDLE KEMENANGAN ==========
+function startWinIdle() {
+  clearWinIdle();
+  winIdleInterval = setInterval(() => {
+    if (!win) {
+      clearWinIdle();
+      return;
+    }
+    spawnParticles(8);
+  }, 400);
+}
+
+function clearWinIdle() {
+  if (winIdleInterval) {
+    clearInterval(winIdleInterval);
+    winIdleInterval = null;
+  }
+}
+
+// ========== EFEK & ANIMASI ==========
+function shakeCurrentRow() {
+  const row = document.querySelector(`.row[data-row='${currentRow}']`);
+  if (row) {
+    row.classList.add('shake');
+    row.addEventListener('animationend', () => row.classList.remove('shake'), { once: true });
+  }
+}
+
+function showMessage(msg) {
+  messageArea.textContent = msg;
+  setTimeout(() => {
+    if (messageArea.textContent === msg) messageArea.textContent = '';
+  }, 2000);
+}
+
+function spawnParticles(count = 40, large = false) {
+  const colors = ['#6f6', '#ff6', '#ff6b6b', '#6bc5ff', '#ffb347', '#ff69b4', '#ffd700'];
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    if (large) particle.classList.add('large');
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const angle = Math.random() * 360;
+    const distance = large ? 80 + Math.random() * 140 : 40 + Math.random() * 80;
+    const tx = Math.cos(angle * Math.PI / 180) * distance;
+    const ty = Math.sin(angle * Math.PI / 180) * distance;
+    particle.style.left = x + '%';
+    particle.style.top = y + '%';
+    particle.style.setProperty('--tx', tx + 'px');
+    particle.style.setProperty('--ty', ty + 'px');
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.animationDuration = (0.8 + Math.random() * 0.8) + 's';
+    particleContainer.appendChild(particle);
+    setTimeout(() => particle.remove(), 1800);
+  }
+}
+
+// ========== POPUP (BORDER MERAH KALAH & ANIMASI SCALE) ==========
+function showPopup(isWin) {
+  popupOverlay.classList.add('active');
+  const popupEl = document.getElementById('popup');
+
+  popupEl.classList.remove('win', 'lose');
+
+  if (isWin) {
+    popupEl.classList.add('win');
+    popupIcon.textContent = '🏆';
+    popupTitle.textContent = 'KAMU MENANG!';
+    popupMessage.textContent = 'Hebat! Kata berhasil ditebak.';
+    popupAnswer.textContent = targetWord.toUpperCase();
+    spawnParticles(100, true); // partikel besar meriah
+  } else {
+    popupEl.classList.add('lose');
+    popupIcon.textContent = '😵';
+    popupTitle.textContent = 'GAME OVER';
+    popupMessage.textContent = 'Kesempatan habis. Kata yang benar:';
+    popupAnswer.textContent = targetWord.toUpperCase();
+  }
+
+  popupBtn.textContent = 'Main Lagi';
+  popupBtn.onclick = () => {
+    popupOverlay.classList.remove('active');
+    restartGame();
+  };
+
+  // Fokus tombol agar mudah ditekan Enter
+  setTimeout(() => popupBtn.focus(), 100);
+}
+
+// ========== HINT ==========
+function useHint() {
+  if (gameOver || hintUsed) return;
+  const revealedPositions = new Set();
+  if (attempts.length > 0) {
+    const lastGuess = attempts[attempts.length - 1];
+    const colors = computeColors(lastGuess, targetWord);
+    colors.forEach((color, idx) => {
+      if (color === 'correct') revealedPositions.add(idx);
+    });
+  }
+
+  const candidates = [];
+  for (let i = 0; i < targetWord.length; i++) {
+    if (!revealedPositions.has(i)) candidates.push(i);
+  }
+  if (candidates.length === 0) {
+    showMessage('Semua huruf sudah benar!');
+    return;
+  }
+  const randomPos = candidates[Math.floor(Math.random() * candidates.length)];
+  const letter = targetWord[randomPos];
+
+  hintData = { position: randomPos, letter: letter };
+  hintUsed = true;
+  hintCountSpan.textContent = '0';
+  hintBtn.disabled = true;
+
+  hintText.textContent = `Huruf ke-${randomPos + 1} adalah "${letter.toUpperCase()}"`;
+  hintDisplay.classList.add('active');
+  showMessage('Petunjuk digunakan!');
+}
+
+// ========== RESTART ==========
+function restartGame() {
+  particleContainer.innerHTML = '';
+  clearWinIdle();
+  stopBackgroundMusic();
+  popupOverlay.classList.remove('active');
+  initGame();
+}
+
+// ========== BACKGROUND STARS ==========
+function createStars() {
+  starsContainer.innerHTML = '';
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (15 + Math.random() * 25) + 's';
+    starsContainer.appendChild(star);
+  }
+}
+
+// ========== EVENT LISTENERS ==========
+guessBtn.addEventListener('click', submitGuess);
+guessInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    submitGuess();
+  }
+});
+
+guessInput.addEventListener('input', () => {
+  const currentLength = guessInput.value.length;
+  if (currentLength > (guessInput.dataset.prevLength || 0)) {
+    playKeyPressSound();
+  }
+  guessInput.dataset.prevLength = currentLength;
+});
+
+hintBtn.addEventListener('click', useHint);
+restartBtn.addEventListener('click', restartGame);
+
+popupOverlay.addEventListener('click', (e) => {
+  if (e.target === popupOverlay) {
+    popupOverlay.classList.remove('active');
+    restartGame();
+  }
+});
+
+// ========== MULAI ==========
+loadStats();
+createStars();
+initGame();
