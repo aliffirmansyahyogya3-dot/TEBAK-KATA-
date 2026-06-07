@@ -1,13 +1,39 @@
 // =============================================
 // TEBAK KATA PIXEL - SCRIPT (FINAL ENHANCED)
-// Logika game, animasi, localStorage, Audio (MP3)
+// 100+ Kosakata, Musik Autoplay, Fix Reset
 // =============================================
 
 const WORD_LIST = [
+  // Daftar asli
   "kata", "pixel", "game", "retro", "warna", "tebak", "kunci", "layar",
   "musik", "pohon", "laptop", "kopi", "hujan", "buku", "daun", "bunga",
   "mobil", "pisang", "mangga", "kucing", "sandal", "topi", "baju",
-  "roti", "susu", "meja", "kursi", "lampu", "awan", "bintang"
+  "roti", "susu", "meja", "kursi", "lampu", "awan", "bintang",
+  // Tambahan baru (100+ kata umum 4-6 huruf)
+  "pintu", "makan", "minum", "tidur", "jalan", "baca", "tulis", "gambar",
+  "suara", "cahaya", "tanah", "air", "api", "angin", "hewan", "manusia",
+  "rumah", "kamar", "dapur", "lemari", "piring", "gelas", "sendok", "garpu",
+  "pisau", "cangkir", "kompor", "kulkas", "televisi", "radio", "telepon",
+  "printer", "mouse", "keyboard", "monitor", "speaker", "headset", "kamera",
+  "video", "lagu", "film", "koran", "majalah", "surat", "paket", "uang",
+  "bank", "pasar", "toko", "warung", "restoran", "hotel", "apotek", "obat",
+  "dokter", "suster", "polisi", "tentara", "pilot", "supir", "guru",
+  "dosen", "murid", "mahasiswa", "pelajar", "sekolah", "kampus", "kelas",
+  "ujian", "nilai", "tugas", "libur", "wisata", "pantai", "gunung",
+  "hutan", "sungai", "danau", "laut", "pulau", "desa", "kota", "negara",
+  "dunia", "planet", "langit", "pelangi", "matahari", "rembulan", "bumi",
+  "ruang", "waktu", "hari", "minggu", "bulan", "tahun", "jam", "menit",
+  "detik", "pagi", "siang", "sore", "malam", "cuaca", "panas", "dingin",
+  "salju", "badai", "gempa", "banjir", "asap", "debu", "kotor", "bersih",
+  "indah", "cantik", "tampan", "jelek", "buruk", "baik", "jahat", "marah",
+  "senang", "sedih", "takut", "berani", "malas", "rajin", "pintar", "bodoh",
+  "kaya", "miskin", "muda", "tua", "besar", "kecil", "tinggi", "rendah",
+  "cepat", "lambat", "dekat", "jauh", "atas", "bawah", "depan", "belakang",
+  "samping", "dalam", "luar", "baru", "lama", "hidup", "mati", "sehat",
+  "sakit", "kuat", "lemah", "keras", "lunak", "basah", "kering", "gelap",
+  "terang", "bising", "sunyi", "ramai", "sepi", "penuh", "kosong", "berat",
+  "ringan", "mahal", "murah", "lezat", "enak", "pahit", "manis", "asin",
+  "asam", "pedas", "tawar", "harum", "busuk", "wangi"
 ];
 
 const MAX_ATTEMPTS = 6;
@@ -51,36 +77,39 @@ const chancesDots = document.getElementById('chancesDots');
 const particleContainer = document.getElementById('particleContainer');
 const starsContainer = document.getElementById('starsContainer');
 
-// ========== AUDIO SYSTEM (MP3 + Web Audio API untuk efek suara) ==========
-let audioCtx = null;            // Untuk efek suara pendek
-let bgmAudio = null;           // Musik latar (file MP3)
+// ========== AUDIO SYSTEM (MP3 + Web Audio API) ==========
+let audioCtx = null;
+let bgmAudio = null;
 let audioInitialized = false;
 
 function initAudio() {
   if (audioInitialized) return;
   try {
-    // Inisialisasi AudioContext untuk efek suara
+    // Web Audio API untuk efek suara
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
 
-    // Inisialisasi musik latar dengan file MP3
+    // Musik latar dari file MP3
     bgmAudio = new Audio('morning_paper_tiles.mp3');
     bgmAudio.loop = true;
-    bgmAudio.volume = 1; // Volume bisa disesuaikan (0 - 1)
+    bgmAudio.volume = 0.3;
 
     audioInitialized = true;
+
+    // Mulai musik otomatis setelah inisialisasi (website pribadi)
+    startBackgroundMusic();
   } catch (e) {
     console.warn('Web Audio API tidak didukung');
   }
 }
 
-// Pastikan audio diinisialisasi setelah interaksi user (kebijakan browser)
+// Interaksi pertama akan memicu initAudio
 document.body.addEventListener('click', initAudio, { once: true });
 document.body.addEventListener('keydown', initAudio, { once: true });
 
-// Fungsi efek suara pendek (tetap menggunakan Web Audio API)
+// Efek suara pendek (tetap)
 function playTone(freq, duration, type = 'square', gainValue = 0.15) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
@@ -116,11 +145,11 @@ function playLoseSound() {
   setTimeout(() => playTone(150, 0.4, 'sawtooth', 0.15), 200);
 }
 
-// Musik latar menggunakan file MP3
+// Musik latar
 function startBackgroundMusic() {
   if (!bgmAudio) return;
-  bgmAudio.currentTime = 0; // Mulai dari awal
-  bgmAudio.play().catch(e => console.log('Autoplay dicegah, klik dulu:', e));
+  bgmAudio.currentTime = 0;
+  bgmAudio.play().catch(e => console.log('Musik tidak bisa autoplay:', e));
 }
 
 function stopBackgroundMusic() {
@@ -155,7 +184,7 @@ function updateStatsUI() {
 // ========== INISIALISASI GAME ==========
 function initGame() {
   clearWinIdle();
-  stopBackgroundMusic();
+  // Tidak lagi stopBackgroundMusic() di sini agar musik tidak ter-reset
   targetWord = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toLowerCase();
   attempts = [];
   currentRow = 0;
@@ -178,10 +207,7 @@ function initGame() {
   updateChancesDots();
   guessInput.focus();
 
-  // Musik hanya akan diputar jika audio sudah diinisialisasi
-  if (audioInitialized) {
-    startBackgroundMusic();
-  }
+  // Musik akan tetap berjalan jika sudah pernah dimulai
 }
 
 function renderBoard() {
@@ -315,6 +341,7 @@ function checkWinOrLose(guess) {
     playWinSound();
     spawnParticles(50);
     startWinIdle();
+    stopBackgroundMusic(); // Musik berhenti saat menang
     setTimeout(() => showPopup(true), 800);
   } else {
     currentRow++;
@@ -328,7 +355,7 @@ function checkWinOrLose(guess) {
       updateStatsUI();
       disableInput();
       playLoseSound();
-      stopBackgroundMusic();
+      stopBackgroundMusic(); // Musik berhenti saat kalah
       setTimeout(() => showPopup(false), 500);
     } else {
       const nextRow = document.querySelector(`.row[data-row='${currentRow}']`);
@@ -466,13 +493,18 @@ function useHint() {
   showMessage('Petunjuk digunakan!');
 }
 
-// ========== RESTART ==========
+// ========== RESTART (MUSIK DIMULAI LAGI) ==========
 function restartGame() {
   particleContainer.innerHTML = '';
   clearWinIdle();
+  // Hentikan musik dulu (biar restart dari awal)
   stopBackgroundMusic();
   popupOverlay.classList.remove('active');
   initGame();
+  // Mulai musik kembali
+  if (audioInitialized) {
+    startBackgroundMusic();
+  }
 }
 
 // ========== BACKGROUND STARS ==========
