@@ -1,6 +1,6 @@
 // =============================================
 // TEBAK KATA PIXEL - SCRIPT (FINAL ENHANCED)
-// Logika game, animasi, localStorage, Audio
+// Logika game, animasi, localStorage, Audio (MP3)
 // =============================================
 
 const WORD_LIST = [
@@ -51,32 +51,36 @@ const chancesDots = document.getElementById('chancesDots');
 const particleContainer = document.getElementById('particleContainer');
 const starsContainer = document.getElementById('starsContainer');
 
-// ========== AUDIO SYSTEM ==========
-let audioCtx = null;
-let musicGain = null;
-let musicOscillators = [];
-let musicInterval = null;
+// ========== AUDIO SYSTEM (MP3 + Web Audio API untuk efek suara) ==========
+let audioCtx = null;            // Untuk efek suara pendek
+let bgmAudio = null;           // Musik latar (file MP3)
 let audioInitialized = false;
 
 function initAudio() {
   if (audioInitialized) return;
   try {
+    // Inisialisasi AudioContext untuk efek suara
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
     }
-    musicGain = audioCtx.createGain();
-    musicGain.gain.value = 0.12;
-    musicGain.connect(audioCtx.destination);
+
+    // Inisialisasi musik latar dengan file MP3
+    bgmAudio = new Audio('morning_paper_tiles.mp3');
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.3; // Volume bisa disesuaikan (0 - 1)
+
     audioInitialized = true;
   } catch (e) {
     console.warn('Web Audio API tidak didukung');
   }
 }
 
+// Pastikan audio diinisialisasi setelah interaksi user (kebijakan browser)
 document.body.addEventListener('click', initAudio, { once: true });
 document.body.addEventListener('keydown', initAudio, { once: true });
 
+// Fungsi efek suara pendek (tetap menggunakan Web Audio API)
 function playTone(freq, duration, type = 'square', gainValue = 0.15) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
@@ -112,40 +116,18 @@ function playLoseSound() {
   setTimeout(() => playTone(150, 0.4, 'sawtooth', 0.15), 200);
 }
 
+// Musik latar menggunakan file MP3
 function startBackgroundMusic() {
-  if (!audioCtx || !musicGain) return;
-  stopBackgroundMusic();
-  const notes = [
-    262, 294, 330, 349, 392, 440, 494,
-    330, 349, 392, 440, 494, 523
-  ];
-  let index = 0;
-  const playNext = () => {
-    if (!audioCtx || !musicGain) return;
-    const freq = notes[index % notes.length];
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.9);
-    osc.connect(gain);
-    gain.connect(musicGain);
-    osc.start(audioCtx.currentTime);
-    osc.stop(audioCtx.currentTime + 0.9);
-    musicOscillators.push(osc);
-    index++;
-  };
-  musicInterval = setInterval(playNext, 1000);
+  if (!bgmAudio) return;
+  bgmAudio.currentTime = 0; // Mulai dari awal
+  bgmAudio.play().catch(e => console.log('Autoplay dicegah, klik dulu:', e));
 }
 
 function stopBackgroundMusic() {
-  if (musicInterval) {
-    clearInterval(musicInterval);
-    musicInterval = null;
+  if (bgmAudio) {
+    bgmAudio.pause();
+    bgmAudio.currentTime = 0;
   }
-  musicOscillators.forEach(osc => { try { osc.stop(); } catch(e) {} });
-  musicOscillators = [];
 }
 
 // ========== STATISTIK ==========
@@ -196,6 +178,7 @@ function initGame() {
   updateChancesDots();
   guessInput.focus();
 
+  // Musik hanya akan diputar jika audio sudah diinisialisasi
   if (audioInitialized) {
     startBackgroundMusic();
   }
@@ -419,7 +402,7 @@ function spawnParticles(count = 40, large = false) {
   }
 }
 
-// ========== POPUP (BORDER MERAH KALAH & ANIMASI SCALE) ==========
+// ========== POPUP ==========
 function showPopup(isWin) {
   popupOverlay.classList.add('active');
   const popupEl = document.getElementById('popup');
@@ -432,7 +415,7 @@ function showPopup(isWin) {
     popupTitle.textContent = 'KAMU MENANG!';
     popupMessage.textContent = 'Hebat! Kata berhasil ditebak.';
     popupAnswer.textContent = targetWord.toUpperCase();
-    spawnParticles(100, true); // partikel besar meriah
+    spawnParticles(100, true);
   } else {
     popupEl.classList.add('lose');
     popupIcon.textContent = '😵';
@@ -447,7 +430,6 @@ function showPopup(isWin) {
     restartGame();
   };
 
-  // Fokus tombol agar mudah ditekan Enter
   setTimeout(() => popupBtn.focus(), 100);
 }
 
