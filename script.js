@@ -68,7 +68,7 @@ function initAudio() {
     // Inisialisasi musik latar dengan file MP3
     bgmAudio = new Audio('morning_paper_tiles.mp3');
     bgmAudio.loop = true;
-    bgmAudio.volume = 0.3; // Volume bisa disesuaikan (0 - 1)
+    bgmAudio.volume = 1; // Volume bisa disesuaikan (0 - 1)
 
     audioInitialized = true;
   } catch (e) {
