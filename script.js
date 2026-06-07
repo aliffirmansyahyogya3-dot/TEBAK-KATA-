@@ -1,5 +1,5 @@
 // =============================================
-// TEBAK KATA ARCADE - SCRIPT
+// TEBAK KATA ARCADE - SCRIPT (FIXED COLORS)
 // Keyboard virtual, nyawa berwarna
 // =============================================
 
@@ -45,11 +45,11 @@ let win = false;
 let hintUsed = false;
 let hintData = null;
 let winIdleInterval = null;
-let currentGuess = ''; // string tebakan dari keyboard
+let currentGuess = '';
 
 let stats = { totalWins: 0, totalLosses: 0, winStreak: 0 };
 
-// Elemen DOM
+// DOM elements
 const gameBoard = document.getElementById('gameBoard');
 const messageArea = document.getElementById('messageArea');
 const hintBtn = document.getElementById('hintBtn');
@@ -72,7 +72,7 @@ const particleContainer = document.getElementById('particleContainer');
 const starsContainer = document.getElementById('starsContainer');
 const keyboard = document.getElementById('virtualKeyboard');
 
-// ========== AUDIO (MP3 + efek) ==========
+// ========== AUDIO ==========
 let audioCtx = null;
 let bgmAudio = null;
 let audioInitialized = false;
@@ -129,7 +129,7 @@ function updateStatsUI() {
   totalLossesSpan.textContent = stats.totalLosses;
 }
 
-// ========== GAME ==========
+// ========== GAME BOARD ==========
 function initGame() {
   clearWinIdle();
   targetWord = WORD_LIST[Math.floor(Math.random()*WORD_LIST.length)].toLowerCase();
@@ -147,9 +147,9 @@ function initGame() {
   hintText.textContent = '';
   messageArea.textContent = '';
 
-  renderBoard();
+  renderBoard();           // render awal
   updateChancesDots();
-  focusCurrentRow(); // tampilkan huruf di baris
+  focusCurrentRow();       // tampilkan baris pertama dengan currentGuess kosong
 }
 
 function renderBoard() {
@@ -165,12 +165,22 @@ function renderBoard() {
       tile.dataset.col = c;
       if (r < attempts.length) {
         tile.textContent = attempts[r][c] || '';
-      } else if (r === currentRow && c < currentGuess.length) {
-        tile.textContent = currentGuess[c];
       }
       row.appendChild(tile);
     }
     gameBoard.appendChild(row);
+  }
+}
+
+function focusCurrentRow() {
+  // Hapus kelas 'current' dari semua baris
+  document.querySelectorAll('.row').forEach(r => r.classList.remove('current'));
+  const row = document.querySelector(`.row[data-row='${currentRow}']`);
+  if (!row) return;
+  row.classList.add('current');
+  const tiles = row.querySelectorAll('.tile');
+  for (let i=0; i<tiles.length; i++) {
+    tiles[i].textContent = i < currentGuess.length ? currentGuess[i] : '';
   }
 }
 
@@ -191,16 +201,7 @@ function updateChancesDots() {
   chancesDots.innerHTML = dotsHTML;
 }
 
-function focusCurrentRow() {
-  const row = document.querySelector(`.row[data-row='${currentRow}']`);
-  if (!row) return;
-  const tiles = row.querySelectorAll('.tile');
-  for (let i=0; i<tiles.length; i++) {
-    tiles[i].textContent = i < currentGuess.length ? currentGuess[i] : '';
-  }
-}
-
-// ========== KEYBOARD VIRTUAL ==========
+// ========== KEYBOARD HANDLER ==========
 function handleKeyPress(key) {
   if (gameOver) return;
 
@@ -223,7 +224,7 @@ function handleKeyPress(key) {
       playKeyPressSound();
     }
   }
-  focusCurrentRow();
+  focusCurrentRow(); // perbarui tampilan huruf di baris
 }
 
 function submitGuess() {
@@ -233,22 +234,27 @@ function submitGuess() {
 
   playSubmitSound();
   attempts.push(guess);
-  currentRow++;
-  currentGuess = '';
+  const prevRowIndex = currentRow;
+  currentRow++;                // pindah ke baris berikutnya
+  currentGuess = '';           // reset tebakan
 
-  // Render ulang board dengan animasi flip
-  const prevRow = document.querySelector(`.row[data-row='${currentRow-1}']`);
+  // Ambil baris yang baru saja diisi
+  const prevRow = document.querySelector(`.row[data-row='${prevRowIndex}']`);
   if (prevRow) {
     const tiles = prevRow.querySelectorAll('.tile');
-    const colors = computeColors(guess, targetWord);
     tiles.forEach((tile, i) => tile.textContent = guess[i]);
-    animateTiles(prevRow, colors, () => {
-      checkWinOrLose(guess);
-    });
+    // Hapus kelas current dari baris lama
+    prevRow.classList.remove('current');
   }
-  // Reset current guess
+
+  const colors = computeColors(guess, targetWord);
+  animateTiles(prevRow, colors, () => {
+    checkWinOrLose(guess);
+  });
+
   messageArea.textContent = '';
-  renderBoard();
+  // Jangan render ulang board, cukup perbarui tampilan baris baru (kosong)
+  focusCurrentRow();
   updateChancesDots();
 }
 
@@ -256,11 +262,9 @@ function computeColors(guess, target) {
   const result = Array(target.length).fill('absent');
   const targetCount = {};
   for (let ch of target) targetCount[ch] = (targetCount[ch]||0)+1;
-  // hijau
   for (let i=0; i<guess.length; i++) {
     if (guess[i]===target[i]) { result[i]='correct'; targetCount[guess[i]]--; }
   }
-  // kuning
   for (let i=0; i<guess.length; i++) {
     if (result[i]==='correct') continue;
     if (targetCount[guess[i]]>0) { result[i]='present'; targetCount[guess[i]]--; }
@@ -306,12 +310,10 @@ function checkWinOrLose(guess) {
       stopBackgroundMusic();
       setTimeout(()=>showPopup(false), 500);
     }
+    // Jika belum game over, baris baru sudah difokuskan di submitGuess, tidak perlu apa-apa
   }
-  renderBoard();
   updateChancesDots();
 }
-
-function disableInput() {}
 
 // ========== EFEK ==========
 function shakeCurrentRow() {
@@ -419,7 +421,6 @@ function createStars() {
 }
 
 // ========== EVENT LISTENERS ==========
-// Keyboard virtual
 keyboard.addEventListener('click', (e) => {
   const btn = e.target.closest('.key-btn');
   if (!btn) return;
@@ -427,12 +428,9 @@ keyboard.addEventListener('click', (e) => {
   handleKeyPress(key);
 });
 
-// Hindari input fisik (nonaktifkan, tidak ada elemen input)
-// Tombol hint & restart
 hintBtn.addEventListener('click', useHint);
 restartBtn.addEventListener('click', restartGame);
 
-// Popup overlay
 popupOverlay.addEventListener('click', (e) => {
   if (e.target === popupOverlay) {
     popupOverlay.classList.remove('active');
