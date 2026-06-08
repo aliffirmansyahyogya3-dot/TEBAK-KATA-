@@ -350,6 +350,7 @@ const Game = (() => {
   let hintUsed = false;
   let gameOver = false;
   let tileGrid = [];
+  let lockedHints = [];
 
   function init() {
     // Acak panjang kata, pemain tidak bisa pilih
@@ -358,6 +359,7 @@ const Game = (() => {
     targetWord = pickWord(wordLength);
     currentRow = 0;
     currentInput = new Array(wordLength).fill('');
+    lockedHints = new Array(wordLength).fill(false);
     lives = maxRows;
     hintUsed = false;
     gameOver = false;
@@ -445,7 +447,9 @@ const Game = (() => {
 
   // Cari tile kosong pertama untuk active
   function updateActiveTile() {
-    const activeIdx = currentInput.findIndex(ch => ch === '');
+    const activeIdx = currentInput.findIndex(
+  (ch, i) => ch === '' && !lockedHints[i]
+);
     tileGrid[currentRow].forEach((tile, i) => {
       tile.classList.toggle('active', i === activeIdx);
     });
@@ -463,18 +467,32 @@ const Game = (() => {
   }
 
   function handleBackspace() {
-    if (gameOver) return;
-    let idx = -1;
-    for (let i = currentInput.length - 1; i >= 0; i--) {
-      if (currentInput[i] !== '') { idx = i; break; }
+  if (gameOver) return;
+
+  let idx = -1;
+
+  for (let i = currentInput.length - 1; i >= 0; i--) {
+    if (
+      currentInput[i] !== '' &&
+      !lockedHints[i]
+    ) {
+      idx = i;
+      break;
     }
-    if (idx === -1) return;
-    currentInput[idx] = '';
-    const tile = tileGrid[currentRow][idx];
-    tile.textContent = '';
-    tile.classList.remove('filled', 'active');
-    updateActiveTile();
   }
+
+  if (idx === -1) return;
+
+  currentInput[idx] = '';
+
+  const tile = tileGrid[currentRow][idx];
+  tile.textContent = '';
+  tile.classList.remove('filled', 'active');
+
+  updateActiveTile();
+
+  }
+  
 
   function evaluateGuess() {
     if (gameOver) return;
@@ -486,7 +504,14 @@ const Game = (() => {
     }
     const guess = currentInput.join('').toUpperCase();
     const target = targetWord.toUpperCase();
-    const result = computeResult(guess, target);
+    let result = computeResult(guess, target);
+
+lockedHints.forEach((locked, i) => {
+  if (locked) {
+    result[i] = 'correct';
+  }
+});
+    
 
     result.forEach((state, i) => {
       const tile = tileGrid[currentRow][i];
@@ -590,9 +615,14 @@ const Game = (() => {
 
     const pos = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
     currentInput[pos] = target[pos];
+    lockedHints[pos] = true;
     const tile = tileGrid[currentRow][pos];
     tile.textContent = target[pos];
-    tile.classList.add('hint-reveal', 'filled');
+    tile.classList.add(
+  'hint-reveal',
+  'filled',
+  'correct'
+);
     updateActiveTile();
     showToast('HINT DIGUNAKAN!', '#ffe600');
   }
