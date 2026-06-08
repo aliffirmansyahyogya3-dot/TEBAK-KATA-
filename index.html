@@ -1,129 +1,127 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tebak Kata Arcade</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>TEBAK KATA CHALLENGE</title>
+  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)" />
+  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin />
+  <link href="[https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap](https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap)" rel="stylesheet" />
+  <!-- Memanggil file CSS eksternal -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="stars-container" id="starsContainer"></div>
 
-    <div class="arcade-machine">
-        <div class="arcade-screen">
-            <div class="game-console" id="gameConsole">
-                <div class="particle-container" id="particleContainer"></div>
+  <div id="bg-layer">
+    <div class="scanlines"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="floating-lights">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+  </div>
 
-                <header class="game-header">
-                    <h1 class="game-title">
-                        <span class="title-pixel">TEBAK</span>
-                        <span class="title-pixel accent">KATA</span>
-                    </h1>
-                </header>
-
-                <div class="stats-bar">
-                    <div class="stat-item">
-                        <span class="stat-label">STREAK</span>
-                        <span class="stat-value" id="winStreak">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">MENANG</span>
-                        <span class="stat-value win" id="totalWins">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">KALAH</span>
-                        <span class="stat-value lose" id="totalLosses">0</span>
-                    </div>
-                </div>
-
-                <div class="hint-display" id="hintDisplay">
-                    <span class="hint-icon">💡</span>
-                    <span class="hint-text" id="hintText"></span>
-                </div>
-
-                <div class="game-board" id="gameBoard"></div>
-                <div class="message-area" id="messageArea"></div>
-            </div>
+  <div id="arcade-cabinet">
+    <div id="cabinet-top">
+      <div class="marquee-light-strip left"></div>
+      <div id="marquee">
+        <span class="marquee-title">TEBAK KATA</span>
+        <span class="marquee-sub">CHALLENGE</span>
+        <div class="marquee-deco">
+          <span class="coin-icon">⬡</span>
+          <span class="star-icon">✦</span>
+          <span class="coin-icon">⬡</span>
         </div>
-
-        <!-- Panel kontrol -->
-        <div class="arcade-controls">
-            <div class="control-panel">
-                <!-- Joystick -->
-                <div class="joystick">
-                    <div class="stick-base"></div>
-                    <div class="stick-shaft"></div>
-                    <div class="stick-ball"></div>
-                </div>
-
-                <!-- Keyboard virtual -->
-                <div class="virtual-keyboard" id="virtualKeyboard">
-                    <div class="keyboard-row">
-                        <button class="key-btn" data-key="q">Q</button>
-                        <button class="key-btn" data-key="w">W</button>
-                        <button class="key-btn" data-key="e">E</button>
-                        <button class="key-btn" data-key="r">R</button>
-                        <button class="key-btn" data-key="t">T</button>
-                        <button class="key-btn" data-key="y">Y</button>
-                        <button class="key-btn" data-key="u">U</button>
-                        <button class="key-btn" data-key="i">I</button>
-                        <button class="key-btn" data-key="o">O</button>
-                        <button class="key-btn" data-key="p">P</button>
-                    </div>
-                    <div class="keyboard-row">
-                        <button class="key-btn" data-key="a">A</button>
-                        <button class="key-btn" data-key="s">S</button>
-                        <button class="key-btn" data-key="d">D</button>
-                        <button class="key-btn" data-key="f">F</button>
-                        <button class="key-btn" data-key="g">G</button>
-                        <button class="key-btn" data-key="h">H</button>
-                        <button class="key-btn" data-key="j">J</button>
-                        <button class="key-btn" data-key="k">K</button>
-                        <button class="key-btn" data-key="l">L</button>
-                    </div>
-                    <div class="keyboard-row">
-                        <button class="key-btn wide backspace-btn" data-key="backspace">⌫</button>
-                        <button class="key-btn" data-key="z">Z</button>
-                        <button class="key-btn" data-key="x">X</button>
-                        <button class="key-btn" data-key="c">C</button>
-                        <button class="key-btn" data-key="v">V</button>
-                        <button class="key-btn" data-key="b">B</button>
-                        <button class="key-btn" data-key="n">N</button>
-                        <button class="key-btn" data-key="m">M</button>
-                        <button class="key-btn wide enter-btn" data-key="enter">ENTER</button>
-                    </div>
-                </div>
-
-                <!-- Tombol aksi tambahan -->
-                <div class="action-buttons">
-                    <button id="hintBtn" class="arcade-btn btn-hint" title="Petunjuk (1x)">
-                        <span>💡<span class="hint-count" id="hintCount">1</span></span>
-                    </button>
-                    <button id="restartBtn" class="arcade-btn btn-restart" title="Restart">
-                        <span>↻</span>
-                    </button>
-                </div>
-
-                <!-- Nyawa -->
-                <div class="chances-display">
-                    <span class="chances-label">NYAWA</span>
-                    <span class="chances-dots" id="chancesDots"></span>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="marquee-light-strip right"></div>
     </div>
 
-    <div class="popup-overlay" id="popupOverlay">
-        <div class="popup" id="popup">
-            <div class="popup-icon" id="popupIcon"></div>
-            <h2 class="popup-title" id="popupTitle"></h2>
-            <p class="popup-message" id="popupMessage"></p>
-            <p class="popup-answer" id="popupAnswer"></p>
-            <button id="popupBtn" class="btn btn-popup">Main Lagi</button>
+    <div id="cabinet-screen-bezel">
+      <div class="bezel-corner tl"></div>
+      <div class="bezel-corner tr"></div>
+      <div class="bezel-corner bl"></div>
+      <div class="bezel-corner br"></div>
+      <div class="screen-reflection"></div>
+
+      <div id="screen">
+        <div id="hud-top">
+          <div id="stats-panel">
+            <div class="stat-item"><span class="stat-label">WIN</span><span class="stat-val" id="stat-win">0</span></div>
+            <div class="stat-item"><span class="stat-label">LOSE</span><span class="stat-val" id="stat-lose">0</span></div>
+            <div class="stat-item streak"><span class="stat-label">STREAK</span><span class="stat-val" id="stat-streak">0</span></div>
+            <div class="stat-item"><span class="stat-label">BEST</span><span class="stat-val" id="stat-best">0</span></div>
+          </div>
+          <div id="sound-btn" title="Toggle Sound"><span id="sound-icon">♪</span></div>
         </div>
+
+        <div id="lifebar-container">
+          <span class="lifebar-label">LIFE</span>
+          <div id="lifebar">
+            <div id="lifebar-fill"></div>
+            <div id="lifebar-segments"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <span id="lives-text">6</span>
+        </div>
+
+        <div id="game-grid-wrapper">
+          <div id="game-grid"></div>
+        </div>
+
+        <div id="action-buttons">
+          <button id="hint-btn" class="action-btn hint-btn"><span class="btn-icon">💡</span><span class="btn-text">HINT</span></button>
+          <button id="enter-btn" class="action-btn enter-btn"><span class="btn-icon">▶</span><span class="btn-text">ENTER</span></button>
+          <button id="reset-btn" class="action-btn reset-btn"><span class="btn-icon">↺</span><span class="btn-text">RESET</span></button>
+        </div>
+
+        <div id="keyboard">
+          <div class="kb-row" id="kb-row-1"></div>
+          <div class="kb-row" id="kb-row-2"></div>
+          <div class="kb-row" id="kb-row-3">
+            <button class="kb-key special-key" id="kb-backspace">⌫</button>
+            <div id="kb-row-3-letters"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="cabinet-bottom">
+      <div class="bottom-panel">
+        <div class="coin-slot"><div class="slot-hole"></div><span>INSERT COIN</span></div>
+        <div class="speaker-grille"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="coin-slot"><div class="slot-hole"></div><span>INSERT COIN</span></div>
+      </div>
+    </div>
+
+    <div id="cabinet-legs">
+      <div class="leg left"></div>
+      <div class="leg right"></div>
+    </div>
+  </div>
+
+  <div id="win-popup" class="popup hidden">
+    <div class="popup-inner win-inner">
+      <div class="popup-pixels"></div>
+      <div class="popup-title">YOU WIN!</div>
+      <div class="popup-word" id="win-word-display"></div>
+      <div class="popup-sub">KATA BENAR DITEMUKAN!</div>
+      <div class="popup-streak" id="win-streak-display"></div>
+      <button class="popup-btn" id="win-next-btn">▶ LANJUT</button>
+    </div>
+  </div>
+
+  <div id="lose-popup" class="popup hidden">
+    <div class="popup-inner lose-inner">
+      <div class="popup-glitch-lines"></div>
+      <div class="popup-title glitch-text" data-text="GAME OVER">GAME OVER</div>
+      <div class="popup-sub">KATA YANG BENAR:</div>
+      <div class="popup-word lose-word" id="lose-word-display"></div>
+      <button class="popup-btn lose-btn" id="lose-retry-btn">↺ COBA LAGI</button>
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Memanggil file JavaScript eksternal -->
+  <script src="script.js"></script>
 </body>
 </html>
