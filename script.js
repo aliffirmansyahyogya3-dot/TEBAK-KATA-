@@ -506,13 +506,8 @@ const Game = (() => {
     const target = targetWord.toUpperCase();
     let result = computeResult(guess, target);
 
-lockedHints.forEach((locked, i) => {
-  if (locked) {
-    result[i] = 'correct';
-  }
-});
-    console.log("lockedHints =", lockedHints);
-console.log("result =", result);
+
+    
     
 
     result.forEach((state, i) => {
