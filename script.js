@@ -1,284 +1,772 @@
-// =============================================
-// TEBAK KATA ARCADE - SCRIPT (KEYBOARD FIX)
-// =============================================
+'use strict';
 
-const WORD_LIST = [
-  "kata", "pixel", "game", "retro", "warna", "tebak", "kunci", "layar",
-  "musik", "pohon", "laptop", "kopi", "hujan", "buku", "daun", "bunga",
-  "mobil", "pisang", "mangga", "kucing", "sandal", "topi", "baju",
-  "roti", "susu", "meja", "kursi", "lampu", "awan", "bintang",
-  "pintu", "makan", "minum", "tidur", "jalan", "baca", "tulis", "gambar",
-  "suara", "cahaya", "tanah", "air", "api", "angin", "hewan", "manusia",
-  "rumah", "kamar", "dapur", "lemari", "piring", "gelas", "sendok", "garpu",
-  "pisau", "cangkir", "kompor", "kulkas", "televisi", "radio", "telepon",
-  "printer", "mouse", "keyboard", "monitor", "speaker", "headset", "kamera",
-  "video", "lagu", "film", "koran", "majalah", "surat", "paket", "uang",
-  "bank", "pasar", "toko", "warung", "restoran", "hotel", "apotek", "obat",
-  "dokter", "suster", "polisi", "tentara", "pilot", "supir", "guru",
-  "dosen", "murid", "mahasiswa", "pelajar", "sekolah", "kampus", "kelas",
-  "ujian", "nilai", "tugas", "libur", "wisata", "pantai", "gunung",
-  "hutan", "sungai", "danau", "laut", "pulau", "desa", "kota", "negara",
-  "dunia", "planet", "langit", "pelangi", "matahari", "rembulan", "bumi",
-  "ruang", "waktu", "hari", "minggu", "bulan", "tahun", "jam", "menit",
-  "detik", "pagi", "siang", "sore", "malam", "cuaca", "panas", "dingin",
-  "salju", "badai", "gempa", "banjir", "asap", "debu", "kotor", "bersih",
-  "indah", "cantik", "tampan", "jelek", "buruk", "baik", "jahat", "marah",
-  "senang", "sedih", "takut", "berani", "malas", "rajin", "pintar", "bodoh",
-  "kaya", "miskin", "muda", "tua", "besar", "kecil", "tinggi", "rendah",
-  "cepat", "lambat", "dekat", "jauh", "atas", "bawah", "depan", "belakang",
-  "samping", "dalam", "luar", "baru", "lama", "hidup", "mati", "sehat",
-  "sakit", "kuat", "lemah", "keras", "lunak", "basah", "kering", "gelap",
-  "terang", "bising", "sunyi", "ramai", "sepi", "penuh", "kosong", "berat",
-  "ringan", "mahal", "murah", "lezat", "enak", "pahit", "manis", "asin",
-  "asam", "pedas", "tawar", "harum", "busuk", "wangi"
-];
+// ============================================================
+// WORD BANK — 200+ Indonesian words grouped by length
+// ============================================================
+const WORD_BANK = {
+  4: [
+    'BUKU','BOLA','BUAH','ANAK','NAMA','MEJA','KURSI','TAHU','SUSU','KAKI',
+    'TALI','KAYU','BATU','EMAS','PAGI','SORE','MALAM','HUJAN','ANGIN','TANAH',
+    'LAUT','SUNGAI','POHON','BUNGA','DAUN','BENIH','CAHAYA','BAYAM','KELAPA','PISANG',
+    'JERUK','APEL','MANGGA','PEPAYA','BAMBU','ROTAN','GABAH','BERAS','KETAN','BUBUR',
+    'NASI','LAUK','KUAH','GARAM','GULA','TEPUNG','KOPI','TEKI','DADU','BUKU',
+    'KUDA','SAPI','ITIK','AYAM','BEBEK','IKAN','TIKUS','KATAK','ULAR','BURUNG',
+    'PADI','SAWAH','KEBUN','HUTAN','GUNUNG','PANTAI','PULAU','KOTA','DESA','JALAN',
+    'RUMAH','PINTU','ATAP','DINDING','LANTAI','SUMUR','KOLAM','KEBAB','ROTI','MADU',
+    'TELUR','TOMAT','BAWANG','LOBAK','WORTEL','KANGKUNG','BAYAM','SAWI','CABE','KUBIS'
+  ].filter(w => w.length === 4),
+  5: [
+    'PINTU','JALAN','RUMAH','MAKAN','TIDUR','PERGI','PULANG','BERDIRI','DUDUK',
+    'BELAJAR','MENULIS','MEMBACA','BERLARI','BERMAIN','BERENANG','MEMANJAT','MELOMPAT',
+    'BURUNG','KUMBANG','SEMUT','LALAT','NYAMUK','KUCING','ANJING','MONYET','HARIMAU',
+    'GAJAH','KERBAU','DOMBA','KAMBING','RUSA','KELINCI','TUPAI','MUSANG','KIJANG',
+    'MAWAR','MELATI','KAMBOJA','ANGGREK','TERATAI','KENANGA','DAHLIA','TULIP',
+    'MATAHARI','BULAN','BINTANG','LANGIT','AWAN','PELANGI','PETIR','GUNTUR',
+    'SEKOLAH','KANTOR','PASAR','TAMAN','STADION','MASJID','GEREJA','VIHARA',
+    'PISANG','DURIAN','RAMBUTAN','MANGGIS','SALAK','PEPAYA','NANAS','SEMANGKA',
+    'SUMBER','DANAU','RAWA','PANTAI','TEBING','LEMBAH','NGARAI','PUNCAK',
+    'SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU','MINGGU',
+    'KURSI','LEMARI','KASUR','BANTAL','SELIMUT','CERMIN','MEJA','LAMPU',
+    'MERAH','HIJAU','BIRU','PUTIH','HITAM','KUNING','JINGGA','UNGU',
+    'TEMAN','SAHABAT','MUSUH','GURU','MURID','DOKTER','PETANI','NELAYAN',
+    'CINTA','RINDU','SEDIH','BAHAGIA','MARAH','TAKUT','MALU','BENCI',
+    'ANGKA','HURUF','KATA','KALIMAT','BUKU','KERTAS','PENSIL','PENGHAPUS'
+  ].filter(w => w.length === 5),
+  6: [
+    'SUNGAI','BANGUN','BANGGA','MANUSIA','NEGARA','BANGSA','BUDAYA','BAHASA',
+    'SEKOLAH','BELAJAR','ILMUAN','DOKTER','PETANI','PELAJAR','PEMIMPIN','PEJUANG',
+    'MASJID','MESJID','GEREJA','VIHARA','PURA','LANGGAR',
+    'MATAHARI','BULAN','BINTANG','PELANGI','AWAN','HUJAN','PETIR','BADAI',
+    'SAWIT','KEBUN','LADANG','HUTAN','GUNUNG','PANTAI','LAUTAN','DANAU',
+    'GAJAH','HARIMAU','KERBAU','ULAR','BUAYA','KALONG','PENYU','LUMBA',
+    'PISANG','DURIAN','NANGKA','RAMBUTAN','CEMPEDAK','LANGSAT','DUKU','MANGGIS',
+    'WORTEL','LOBAK','KANGKUNG','BAYAM','KUBIS','BROKOLI','LABU','TERUNG',
+    'MERAH','JINGGA','KUNING','HIJAU','BIRU','NILA','UNGU','PUTIH',
+    'SENIN','SELASA','KAMIS','JUMAT','SABTU','RABU','MINGGU',
+    'SATU','DUA','TIGA','EMPAT','LIMA','ENAM','TUJUH','DELAPAN',
+    'RUMPUT','SEMAK','POHON','RANTING','DAHAN','AKAR','BATANG','MAHKOTA',
+    'KEPALA','BADAN','TANGAN','KAKI','JARI','PERUT','DADA','PUNGGUNG',
+    'PINTAR','BODOH','CANTIK','TAMPAN','JELEK','BAGUS','BURUK','INDAH',
+    'CEPAT','LAMBAT','TINGGI','RENDAH','BESAR','KECIL','PANJANG','PENDEK',
+    'TERBANG','BERLARI','BERENANG','MEMANJAT','MELOMPAT','MERANGKAK','MELATA',
+    'MEMBACA','MENULIS','BERHITUNG','MENGGAMBAR','MEMASAK','BERNYANYI','MENARI',
+    'PERCAYA','YAKIN','RAGU','MALAS','RAJIN','JUJUR','BOHONG','BERANI',
+    'PULANG','PERGI','DATANG','MASUK','KELUAR','NAIK','TURUN','BELOK'
+  ].filter(w => w.length === 6)
+};
 
-const MAX_ATTEMPTS = 6;
-const STORAGE_KEY = 'tebakKataPixelStats';
+Object.keys(WORD_BANK).forEach(k => {
+  WORD_BANK[k] = [...new Set(WORD_BANK[k].map(w => w.toUpperCase()))];
+});
 
-let targetWord = '';
-let attempts = [];
-let currentRow = 0;
-let gameOver = false;
-let win = false;
-let hintUsed = false;
-let hintData = null;
-let winIdleInterval = null;
-let currentGuess = '';
+// ============================================================
+// AUDIO ENGINE — lebih satisfying
+// ============================================================
+const Audio = (() => {
+  let ctx = null;
+  let muted = false;
+  let ambientOsc = null, ambientGain = null;
 
-let stats = { totalWins:0, totalLosses:0, winStreak:0 };
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
 
-// DOM
-const gameBoard = document.getElementById('gameBoard');
-const messageArea = document.getElementById('messageArea');
-const hintBtn = document.getElementById('hintBtn');
-const hintCountSpan = document.getElementById('hintCount');
-const hintDisplay = document.getElementById('hintDisplay');
-const hintText = document.getElementById('hintText');
-const restartBtn = document.getElementById('restartBtn');
-const popupOverlay = document.getElementById('popupOverlay');
-const popup = document.getElementById('popup');
-const popupIcon = document.getElementById('popupIcon');
-const popupTitle = document.getElementById('popupTitle');
-const popupMessage = document.getElementById('popupMessage');
-const popupAnswer = document.getElementById('popupAnswer');
-const popupBtn = document.getElementById('popupBtn');
-const winStreakSpan = document.getElementById('winStreak');
-const totalWinsSpan = document.getElementById('totalWins');
-const totalLossesSpan = document.getElementById('totalLosses');
-const chancesDots = document.getElementById('chancesDots');
-const particleContainer = document.getElementById('particleContainer');
-const starsContainer = document.getElementById('starsContainer');
-const keyboard = document.getElementById('virtualKeyboard');
+  function beep(freq, type, duration, vol = 0.15, startTime = 0) {
+    if (muted) return;
+    const c = getCtx();
+    const t = c.currentTime + startTime;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.connect(gain); gain.connect(c.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(vol, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+    osc.start(t); osc.stop(t + duration + 0.01);
+  }
 
-// Audio
-let audioCtx = null; let bgmAudio = null; let audioInitialized = false;
-function initAudio() {
-  if (audioInitialized) return;
-  try {
-    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    if (audioCtx.state==='suspended') audioCtx.resume();
-    bgmAudio = new Audio('morning_paper_tiles.mp3');
-    bgmAudio.loop=true; bgmAudio.volume=0.3; audioInitialized=true;
-    startBackgroundMusic();
-  } catch(e) {}
-}
-document.body.addEventListener('click', initAudio, {once:true});
-document.body.addEventListener('keydown', initAudio, {once:true});
+  function noise(duration, vol = 0.06) {
+    if (muted) return;
+    const c = getCtx();
+    const bufSize = c.sampleRate * duration;
+    const buf = c.createBuffer(1, bufSize, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const src = c.createBufferSource();
+    const gain = c.createGain();
+    src.buffer = buf;
+    src.connect(gain); gain.connect(c.destination);
+    gain.gain.setValueAtTime(vol, c.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+    src.start(); src.stop(c.currentTime + duration);
+  }
 
-function playTone(f,d,t='square',g=0.15) {
-  if(!audioCtx) return;
-  const o=audioCtx.createOscillator(), gn=audioCtx.createGain();
-  o.type=t; o.frequency.value=f; gn.gain.setValueAtTime(g,audioCtx.currentTime);
-  gn.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d);
-  o.connect(gn); gn.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+d);
-}
-function playKeyPressSound() { playTone(800,0.08,'square',0.1); }
-function playSubmitSound() { playTone(600,0.1,'triangle',0.2); setTimeout(()=>playTone(900,0.1,'triangle',0.2),50); }
-function playWinSound() { [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,0.2,'square',0.2),i*100)); }
-function playLoseSound() { playTone(200,0.3,'sawtooth',0.15); setTimeout(()=>playTone(150,0.4,'sawtooth',0.15),200); }
-function startBackgroundMusic() { if(bgmAudio) { bgmAudio.currentTime=0; bgmAudio.play().catch(()=>{}); } }
-function stopBackgroundMusic() { if(bgmAudio) { bgmAudio.pause(); bgmAudio.currentTime=0; } }
+  function startAmbient() {
+    if (muted || ambientOsc) return;
+    try {
+      const c = getCtx();
+      ambientOsc = c.createOscillator();
+      ambientGain = c.createGain();
+      const filter = c.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 200;
+      ambientOsc.type = 'sawtooth';
+      ambientOsc.frequency.value = 55;
+      ambientGain.gain.value = 0.06; // lebih keras
+      ambientOsc.connect(filter);
+      filter.connect(ambientGain);
+      ambientGain.connect(c.destination);
+      ambientOsc.start();
+      const lfo = c.createOscillator();
+      const lfoGain = c.createGain();
+      lfo.frequency.value = 0.3;
+      lfoGain.gain.value = 0.02;
+      lfo.connect(lfoGain);
+      lfoGain.connect(ambientGain.gain);
+      lfo.start();
+    } catch(e) {}
+  }
 
-// Statistik
-function loadStats() { const s=localStorage.getItem(STORAGE_KEY); if(s){ try{ stats={...stats,...JSON.parse(s)}; }catch(e){} } updateStatsUI(); }
-function saveStats() { localStorage.setItem(STORAGE_KEY, JSON.stringify(stats)); }
-function updateStatsUI() { winStreakSpan.textContent=stats.winStreak; totalWinsSpan.textContent=stats.totalWins; totalLossesSpan.textContent=stats.totalLosses; }
+  function stopAmbient() {
+    if (ambientOsc) { try { ambientOsc.stop(); } catch(e) {} ambientOsc = null; }
+  }
 
-// Game
-function initGame() {
-  clearWinIdle();
-  targetWord = WORD_LIST[Math.floor(Math.random()*WORD_LIST.length)].toLowerCase();
-  attempts=[]; currentRow=0; gameOver=false; win=false; hintUsed=false; hintData=null; currentGuess='';
-  hintBtn.disabled=false; hintCountSpan.textContent='1'; hintDisplay.classList.remove('active'); hintText.textContent='';
-  messageArea.textContent='';
-  renderBoard(); updateChancesDots(); focusCurrentRow();
-}
-
-function renderBoard() {
-  gameBoard.innerHTML='';
-  for(let r=0; r<MAX_ATTEMPTS; r++) {
-    const row=document.createElement('div'); row.className='row';
-    if(r===currentRow && !gameOver) row.classList.add('current');
-    row.dataset.row=r;
-    for(let c=0; c<targetWord.length; c++) {
-      const tile=document.createElement('div'); tile.className='tile'; tile.dataset.col=c;
-      if(r<attempts.length) tile.textContent=attempts[r][c]||'';
-      row.appendChild(tile);
+  return {
+    get muted() { return muted; },
+    setMuted(v) {
+      muted = v;
+      if (v) stopAmbient();
+      else startAmbient();
+    },
+    initAmbient() { startAmbient(); },
+    keyType() { beep(660, 'square', 0.06, 0.12); noise(0.03, 0.03); },
+    backspace() { beep(330, 'square', 0.06, 0.08); },
+    btnClick() { beep(880, 'square', 0.04, 0.12); },
+    correct() {
+      [523, 659, 784, 1047].forEach((f, i) => beep(f, 'square', 0.1, 0.14, i*0.08));
+    },
+    absent() {
+      beep(180, 'sawtooth', 0.15, 0.12);
+      noise(0.15, 0.04);
+    },
+    present() { beep(440, 'sine', 0.12, 0.1); beep(550, 'sine', 0.08, 0.08, 0.08); },
+    win() {
+      [784,880,784,1047,988,1175,1568].forEach((f,i) => beep(f, 'square', 0.12, 0.2, i*0.1));
+      noise(0.5, 0.03);
+    },
+    lose() {
+      [392, 330, 262, 196].forEach((f,i) => beep(f, 'sawtooth', 0.15, 0.18, i*0.12));
+    },
+    hint() {
+      [880, 1047, 880, 1175].forEach((f,i) => beep(f, 'sine', 0.1, 0.16, i*0.07));
+    },
+    invalidWord() {
+      beep(200, 'square', 0.08, 0.1);
+      beep(150, 'square', 0.08, 0.1, 0.06);
     }
-    gameBoard.appendChild(row);
+  };
+})();
+
+// ============================================================
+// PARTICLE SYSTEM
+// ============================================================
+const Particles = (() => {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let raf;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
-}
 
-function focusCurrentRow() {
-  document.querySelectorAll('.row').forEach(r=>r.classList.remove('current'));
-  const row=document.querySelector(`.row[data-row='${currentRow}']`);
-  if(!row) return;
-  row.classList.add('current');
-  const tiles=row.querySelectorAll('.tile');
-  for(let i=0; i<tiles.length; i++) tiles[i].textContent = i<currentGuess.length ? currentGuess[i] : '';
-}
-
-function updateChancesDots() {
-  const remaining = MAX_ATTEMPTS - currentRow;
-  let html='';
-  for(let i=0; i<MAX_ATTEMPTS; i++) {
-    let cls='';
-    if(i<remaining) {
-      if(remaining>=5) cls='green'; else if(remaining>=3) cls='yellow'; else cls='red';
-    } else cls='empty';
-    html+=`<span class="dot ${cls}"></span>`;
+  function create() {
+    const colors = ['#00f5ff','#ff00e5','#ffe600','#00ff88','#0080ff','#ff8800'];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 0.5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random() * 0.5 + 0.1,
+        alphaDir: (Math.random() > 0.5 ? 1 : -1) * 0.005
+      });
+    }
   }
-  chancesDots.innerHTML=html;
-}
 
-function handleKeyPress(key) {
-  if(gameOver) return;
-  if(key==='backspace') { if(currentGuess.length>0) { currentGuess=currentGuess.slice(0,-1); playKeyPressSound(); } }
-  else if(key==='enter') { if(currentGuess.length===targetWord.length) submitGuess(); else { showMessage('Kata harus '+targetWord.length+' huruf'); shakeCurrentRow(); } return; }
-  else { if(currentGuess.length<targetWord.length) { currentGuess+=key; playKeyPressSound(); } }
-  focusCurrentRow();
-}
-
-function submitGuess() {
-  if(gameOver) return;
-  const guess=currentGuess.toLowerCase();
-  if(guess.length!==targetWord.length) return;
-  playSubmitSound();
-  attempts.push(guess);
-  const prevRowIdx=currentRow;
-  currentRow++; currentGuess='';
-  const prevRow=document.querySelector(`.row[data-row='${prevRowIdx}']`);
-  if(prevRow) {
-    const tiles=prevRow.querySelectorAll('.tile');
-    tiles.forEach((tile,i)=>tile.textContent=guess[i]);
-    prevRow.classList.remove('current');
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.alpha += p.alphaDir;
+      if (p.alpha <= 0.05 || p.alpha >= 0.65) p.alphaDir *= -1;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    });
+    ctx.globalAlpha = 1;
+    raf = requestAnimationFrame(draw);
   }
-  const colors=computeColors(guess,targetWord);
-  animateTiles(prevRow,colors,()=>{ checkWinOrLose(guess); });
-  messageArea.textContent='';
-  focusCurrentRow();
-  updateChancesDots();
+
+  function init() {
+    resize();
+    window.addEventListener('resize', resize);
+    create();
+    draw();
+  }
+
+  return { init };
+})();
+
+// ============================================================
+// CONFETTI
+// ============================================================
+const Confetti = (() => {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  let pieces = [];
+  let raf;
+  const colors = ['#00f5ff','#ff00e5','#ffe600','#00ff88','#ff2255','#ff8800','#0080ff','#ffffff'];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function burst() {
+    resize();
+    pieces = [];
+    for (let i = 0; i < 120; i++) {
+      pieces.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 100,
+        y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 10,
+        vy: Math.random() * -12 - 4,
+        size: Math.floor(Math.random() * 6) + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rot: Math.random() * Math.PI * 2,
+        rotV: (Math.random() - 0.5) * 0.2,
+        gravity: 0.3,
+        life: 1,
+        decay: 0.012 + Math.random() * 0.008
+      });
+    }
+    cancelAnimationFrame(raf);
+    animate();
+    setTimeout(() => { cancelAnimationFrame(raf); ctx.clearRect(0,0,canvas.width,canvas.height); }, 4000);
+  }
+
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.vy += p.gravity;
+      p.x += p.vx; p.y += p.vy;
+      p.rot += p.rotV;
+      p.life -= p.decay;
+      if (p.life <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillStyle = p.color;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+      ctx.restore();
+    });
+    pieces = pieces.filter(p => p.life > 0);
+    if (pieces.length) raf = requestAnimationFrame(animate);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+  return { burst };
+})();
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimeout;
+function showToast(msg, color = '#00f5ff') {
+  let el = document.getElementById('toast-message');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast-message';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.borderColor = color;
+  el.style.color = color;
+  el.style.boxShadow = `0 0 14px ${color}66`;
+  el.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => el.classList.remove('show'), 2000);
 }
 
-function computeColors(guess,target) {
-  const res=Array(target.length).fill('absent');
-  const tc={}; for(let ch of target) tc[ch]=(tc[ch]||0)+1;
-  for(let i=0;i<guess.length;i++) if(guess[i]===target[i]) { res[i]='correct'; tc[guess[i]]--; }
-  for(let i=0;i<guess.length;i++) { if(res[i]==='correct') continue; if(tc[guess[i]]>0) { res[i]='present'; tc[guess[i]]--; } }
-  return res;
+// ============================================================
+// STATS
+// ============================================================
+const Stats = (() => {
+  const KEY = 'pwc_stats';
+  function load() {
+    try {
+      return JSON.parse(localStorage.getItem(KEY)) || { wins:0, losses:0, streak:0, best:0 };
+    } catch(e) { return { wins:0, losses:0, streak:0, best:0 }; }
+  }
+  function save(s) {
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {}
+  }
+  function onWin() {
+    const s = load();
+    s.wins++; s.streak++;
+    if (s.streak > s.best) s.best = s.streak;
+    save(s); return s;
+  }
+  function onLose() {
+    const s = load();
+    s.losses++; s.streak = 0;
+    save(s); return s;
+  }
+  function get() { return load(); }
+  return { onWin, onLose, get };
+})();
+
+function updateStatsUI() {
+  const s = Stats.get();
+  document.getElementById('stat-win').textContent = s.wins;
+  document.getElementById('stat-lose').textContent = s.losses;
+  document.getElementById('stat-streak').textContent = s.streak;
+  document.getElementById('stat-best').textContent = s.best;
 }
 
-function animateTiles(row,colors,cb) {
-  if(!row) { cb(); return; }
-  const tiles=row.querySelectorAll('.tile');
-  let done=0;
-  tiles.forEach((tile,i)=>{
-    setTimeout(()=>{
-      tile.classList.add('flip');
-      setTimeout(()=>{
-        tile.classList.add(colors[i]);
-        tile.addEventListener('animationend',()=>{ done++; if(done===tiles.length) cb(); },{once:true});
-        setTimeout(()=>{ if(done<tiles.length) { done=tiles.length; cb(); } },600);
-      },200);
-    },i*120);
-  });
-}
-
-function checkWinOrLose(guess) {
-  if(guess===targetWord) {
-    win=true; gameOver=true; stats.totalWins++; stats.winStreak++;
-    saveStats(); updateStatsUI(); playWinSound(); spawnParticles(50); startWinIdle();
-    stopBackgroundMusic(); setTimeout(()=>showPopup(true),800);
+function updateLifebar(lives, maxLives) {
+  const fill = document.getElementById('lifebar-fill');
+  const text = document.getElementById('lives-text');
+  const pct = (lives / maxLives) * 100;
+  fill.style.width = pct + '%';
+  text.textContent = lives;
+  let color, shadow;
+  if (lives >= maxLives - 1) {
+    color = 'linear-gradient(90deg, #00ff88, #00cc66)';
+    shadow = '0 0 8px #00ff88';
+    text.style.color = '#00ff88';
+    text.style.textShadow = '0 0 6px #00ff88';
+  } else if (lives >= maxLives / 2) {
+    color = 'linear-gradient(90deg, #ffe600, #cc9900)';
+    shadow = '0 0 8px #ffe600';
+    text.style.color = '#ffe600';
+    text.style.textShadow = '0 0 6px #ffe600';
   } else {
-    if(currentRow>=MAX_ATTEMPTS) { gameOver=true; stats.totalLosses++; stats.winStreak=0; saveStats(); updateStatsUI(); playLoseSound(); stopBackgroundMusic(); setTimeout(()=>showPopup(false),500); }
+    color = 'linear-gradient(90deg, #ff2255, #aa0033)';
+    shadow = '0 0 8px #ff2255';
+    text.style.color = '#ff2255';
+    text.style.textShadow = '0 0 6px #ff2255';
   }
-  updateChancesDots();
+  fill.style.background = color;
+  fill.style.boxShadow = shadow + ', inset 0 1px 0 rgba(255,255,255,0.2)';
+  const container = document.getElementById('lifebar');
+  container.style.animation = 'none';
+  container.offsetHeight;
+  container.style.animation = 'lifeLost 0.3s ease';
 }
 
-function shakeCurrentRow() {
-  const row=document.querySelector(`.row[data-row='${currentRow}']`);
-  if(row){ row.classList.add('shake'); row.addEventListener('animationend',()=>row.classList.remove('shake'),{once:true}); }
-}
-function showMessage(msg) { messageArea.textContent=msg; setTimeout(()=>{ if(messageArea.textContent===msg) messageArea.textContent=''; },2000); }
+// ============================================================
+// GAME CORE — input yang sudah diperbaiki
+// ============================================================
+const Game = (() => {
+  let targetWord = '';
+  let wordLength = 5;
+  let currentRow = 0;
+  let currentInput = [];   // array of chars, length = wordLength, diisi '' untuk kosong
+  let maxRows = 6;
+  let lives = 6;
+  let hintUsed = false;
+  let gameOver = false;
+  let tileGrid = [];
 
-function spawnParticles(count=40,large=false) {
-  const colors=['#6f6','#ff6','#ff6b6b','#6bc5ff','#ffb347','#ff69b4','#ffd700'];
-  for(let i=0;i<count;i++) {
-    const p=document.createElement('div'); p.className='particle'+(large?' large':'');
-    p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%';
-    const angle=Math.random()*360, dist=large?80+Math.random()*140:40+Math.random()*80;
-    p.style.setProperty('--tx',Math.cos(angle*Math.PI/180)*dist+'px');
-    p.style.setProperty('--ty',Math.sin(angle*Math.PI/180)*dist+'px');
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDuration=(0.8+Math.random()*0.8)+'s';
-    particleContainer.appendChild(p);
-    setTimeout(()=>p.remove(),1800);
+  function init() {
+    // Acak panjang kata, pemain tidak bisa pilih
+    const lengths = [4,5,6];
+    wordLength = lengths[Math.floor(Math.random() * lengths.length)];
+    targetWord = pickWord(wordLength);
+    currentRow = 0;
+    currentInput = new Array(wordLength).fill('');
+    lives = maxRows;
+    hintUsed = false;
+    gameOver = false;
+    tileGrid = [];
+
+    buildGrid();
+    buildKeyboard();
+    updateLifebar(lives, maxRows);
+    updateStatsUI();
+    document.getElementById('hint-btn').disabled = false;
+    document.getElementById('win-popup').classList.add('hidden');
+    document.getElementById('lose-popup').classList.add('hidden');
+    updateActiveTile();
   }
-}
-function startWinIdle() { clearWinIdle(); winIdleInterval=setInterval(()=>{ if(!win){clearWinIdle();return;} spawnParticles(8); },400); }
-function clearWinIdle() { if(winIdleInterval){clearInterval(winIdleInterval); winIdleInterval=null;} }
 
-function showPopup(isWin) {
-  popupOverlay.classList.add('active'); popup.classList.remove('win','lose');
-  if(isWin) { popup.classList.add('win'); popupIcon.textContent='🏆'; popupTitle.textContent='KAMU MENANG!'; popupMessage.textContent='Hebat!'; popupAnswer.textContent=targetWord.toUpperCase(); spawnParticles(100,true); }
-  else { popup.classList.add('lose'); popupIcon.textContent='😵'; popupTitle.textContent='GAME OVER'; popupMessage.textContent='Kesempatan habis.'; popupAnswer.textContent=targetWord.toUpperCase(); }
-  popupBtn.textContent='Main Lagi'; popupBtn.onclick=()=>{ popupOverlay.classList.remove('active'); restartGame(); };
-  setTimeout(()=>popupBtn.focus(),100);
-}
-
-function useHint() {
-  if(gameOver||hintUsed) return;
-  const revealed=new Set();
-  if(attempts.length>0) { const last=attempts[attempts.length-1]; const cols=computeColors(last,targetWord); cols.forEach((c,i)=>{ if(c==='correct') revealed.add(i); }); }
-  const candidates=[]; for(let i=0;i<targetWord.length;i++) if(!revealed.has(i)) candidates.push(i);
-  if(candidates.length===0) { showMessage('Semua sudah benar!'); return; }
-  const pos=candidates[Math.floor(Math.random()*candidates.length)];
-  hintData={position:pos,letter:targetWord[pos]}; hintUsed=true; hintCountSpan.textContent='0'; hintBtn.disabled=true;
-  hintText.textContent=`Huruf ke-${pos+1}: "${targetWord[pos].toUpperCase()}"`; hintDisplay.classList.add('active'); showMessage('Petunjuk digunakan!');
-}
-
-function restartGame() {
-  particleContainer.innerHTML=''; clearWinIdle();
-  if(gameOver) stopBackgroundMusic();
-  popupOverlay.classList.remove('active'); initGame();
-  if(gameOver && audioInitialized) startBackgroundMusic();
-}
-
-function createStars() {
-  starsContainer.innerHTML='';
-  for(let i=0;i<80;i++) {
-    const s=document.createElement('div'); s.className='star';
-    s.style.width=(Math.random()*3+1)+'px'; s.style.height=s.style.width;
-    s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%';
-    s.style.animationDelay=Math.random()*3+'s'; s.style.animationDuration=(15+Math.random()*25)+'s';
-    starsContainer.appendChild(s);
+  function pickWord(len) {
+    const pool = WORD_BANK[len];
+    if (!pool || !pool.length) return 'KATA';
+    return pool[Math.floor(Math.random() * pool.length)];
   }
+
+  function buildGrid() {
+    const grid = document.getElementById('game-grid');
+    grid.innerHTML = '';
+    tileGrid = [];
+    for (let r = 0; r < maxRows; r++) {
+      const row = document.createElement('div');
+      row.className = 'grid-row';
+      row.id = `row-${r}`;
+      const rowTiles = [];
+      for (let c = 0; c < wordLength; c++) {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.id = `tile-${r}-${c}`;
+        row.appendChild(tile);
+        rowTiles.push(tile);
+      }
+      tileGrid.push(rowTiles);
+      grid.appendChild(row);
+    }
+  }
+
+  const ROWS = [
+    ['Q','W','E','R','T','Y','U','I','O','P'],
+    ['A','S','D','F','G','H','J','K','L'],
+    ['Z','X','C','V','B','N','M']
+  ];
+  const keyMap = {};
+
+  function buildKeyboard() {
+    Object.keys(keyMap).forEach(k => delete keyMap[k]);
+    ROWS.forEach((row, ri) => {
+      const rowEl = document.getElementById(ri < 2 ? `kb-row-${ri+1}` : 'kb-row-3-letters');
+      if (!rowEl) return;
+      rowEl.innerHTML = '';
+      row.forEach(letter => {
+        const btn = document.createElement('button');
+        btn.className = 'kb-key';
+        btn.textContent = letter;
+        btn.dataset.key = letter;
+        btn.addEventListener('click', () => { Game.handleInput(letter); Audio.keyType(); });
+        rowEl.appendChild(btn);
+        keyMap[letter] = btn;
+      });
+    });
+    const bsBtn = document.getElementById('kb-backspace');
+    if (bsBtn) {
+      const newBs = bsBtn.cloneNode(true);
+      bsBtn.parentNode.replaceChild(newBs, bsBtn);
+      newBs.addEventListener('click', () => { Game.handleBackspace(); Audio.backspace(); });
+    }
+  }
+
+  function updateKeyColor(letter, state) {
+    const btn = keyMap[letter];
+    if (!btn) return;
+    const priority = { 'key-correct': 3, 'key-present': 2, 'key-absent': 1 };
+    const cls = `key-${state}`;
+    const existing = ['key-correct','key-present','key-absent'].find(c => btn.classList.contains(c));
+    if (!existing || (priority[cls] || 0) > (priority[existing] || 0)) {
+      btn.classList.remove('key-correct','key-present','key-absent');
+      btn.classList.add(cls);
+    }
+  }
+
+  // Cari tile kosong pertama untuk active
+  function updateActiveTile() {
+    const activeIdx = currentInput.findIndex(ch => ch === '');
+    tileGrid[currentRow].forEach((tile, i) => {
+      tile.classList.toggle('active', i === activeIdx);
+    });
+  }
+
+  function handleInput(letter) {
+    if (gameOver) return;
+    const idx = currentInput.indexOf('');
+    if (idx === -1) return; // penuh
+    currentInput[idx] = letter.toUpperCase();
+    const tile = tileGrid[currentRow][idx];
+    tile.textContent = letter.toUpperCase();
+    tile.classList.add('filled');
+    updateActiveTile();
+  }
+
+  function handleBackspace() {
+    if (gameOver) return;
+    let idx = -1;
+    for (let i = currentInput.length - 1; i >= 0; i--) {
+      if (currentInput[i] !== '') { idx = i; break; }
+    }
+    if (idx === -1) return;
+    currentInput[idx] = '';
+    const tile = tileGrid[currentRow][idx];
+    tile.textContent = '';
+    tile.classList.remove('filled', 'active');
+    updateActiveTile();
+  }
+
+  function evaluateGuess() {
+    if (gameOver) return;
+    if (currentInput.some(ch => ch === '')) {
+      showToast(`ISI SEMUA ${wordLength} HURUF!`, '#ff8800');
+      shakeRow(currentRow);
+      Audio.invalidWord();
+      return;
+    }
+    const guess = currentInput.join('').toUpperCase();
+    const target = targetWord.toUpperCase();
+    const result = computeResult(guess, target);
+
+    result.forEach((state, i) => {
+      const tile = tileGrid[currentRow][i];
+      setTimeout(() => {
+        tile.classList.remove('active');
+        // Hapus hint-reveal agar tidak konflik warna
+        tile.classList.remove('hint-reveal');
+        tile.classList.add('flip-reveal');
+        setTimeout(() => {
+          tile.classList.remove('flip-reveal');
+          tile.classList.add(state);
+          if (state === 'correct') {
+            setTimeout(() => tile.classList.add('bounce-correct'), 50);
+            setTimeout(() => tile.classList.remove('bounce-correct'), 600);
+            Audio.correct();
+          } else if (state === 'present') {
+            Audio.present();
+          } else {
+            Audio.absent();
+          }
+        }, 250);
+        updateKeyColor(guess[i], state);
+      }, i * 80);
+    });
+
+    const allCorrect = result.every(s => s === 'correct');
+    const totalDelay = wordLength * 80 + 350;
+
+    setTimeout(() => {
+      if (allCorrect) {
+        gameOver = true;
+        const s = Stats.onWin();
+        updateStatsUI();
+        setTimeout(() => {
+          Audio.win();
+          Confetti.burst();
+          showWinPopup(target, s);
+        }, 300);
+      } else {
+        lives--;
+        updateLifebar(lives, maxRows);
+        if (lives <= 0) {
+          gameOver = true;
+          const s = Stats.onLose();
+          updateStatsUI();
+          setTimeout(() => {
+            Audio.lose();
+            showLosePopup(target);
+          }, 300);
+        } else {
+          currentRow++;
+          currentInput = new Array(wordLength).fill('');
+          if (currentRow < maxRows) {
+            updateActiveTile();
+          }
+        }
+      }
+    }, totalDelay);
+
+    currentInput = new Array(wordLength).fill(''); // clear buffer segera
+  }
+
+  function computeResult(guess, target) {
+    const result = Array(guess.length).fill('absent');
+    const targetArr = target.split('');
+    const usedTarget = Array(target.length).fill(false);
+    const usedGuess = Array(guess.length).fill(false);
+    for (let i = 0; i < guess.length; i++) {
+      if (guess[i] === targetArr[i]) {
+        result[i] = 'correct';
+        usedTarget[i] = true;
+        usedGuess[i] = true;
+      }
+    }
+    for (let i = 0; i < guess.length; i++) {
+      if (usedGuess[i]) continue;
+      for (let j = 0; j < targetArr.length; j++) {
+        if (!usedTarget[j] && guess[i] === targetArr[j]) {
+          result[i] = 'present';
+          usedTarget[j] = true;
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
+  function useHint() {
+    if (gameOver || hintUsed) return;
+    hintUsed = true;
+    document.getElementById('hint-btn').disabled = true;
+    Audio.hint();
+
+    const target = targetWord.toUpperCase();
+    // Cari posisi yang masih kosong di currentInput
+    const emptyPositions = [];
+    for (let i = 0; i < wordLength; i++) {
+      if (currentInput[i] === '') emptyPositions.push(i);
+    }
+    if (emptyPositions.length === 0) return;
+
+    const pos = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
+    currentInput[pos] = target[pos];
+    const tile = tileGrid[currentRow][pos];
+    tile.textContent = target[pos];
+    tile.classList.add('hint-reveal', 'filled');
+    updateActiveTile();
+    showToast('HINT DIGUNAKAN!', '#ffe600');
+  }
+
+  function shakeRow(rowIdx) {
+    const row = document.getElementById(`row-${rowIdx}`);
+    if (!row) return;
+    row.classList.remove('shake');
+    row.offsetHeight;
+    row.classList.add('shake');
+    setTimeout(() => row.classList.remove('shake'), 500);
+  }
+
+  function showWinPopup(word, stats) {
+    const popup = document.getElementById('win-popup');
+    document.getElementById('win-word-display').textContent = word;
+    document.getElementById('win-streak-display').textContent =
+      stats.streak > 1 ? `🔥 STREAK: ${stats.streak}` : 'PERTAHANKAN STREAK!';
+    popup.classList.remove('hidden');
+  }
+
+  function showLosePopup(word) {
+    const popup = document.getElementById('lose-popup');
+    document.getElementById('lose-word-display').textContent = word;
+    popup.classList.remove('hidden');
+  }
+
+  return {
+    init,
+    handleInput,
+    handleBackspace,
+    evaluateGuess,
+    useHint,
+    reset() {
+      Audio.btnClick();
+      Game.init();
+    }
+  };
+})();
+
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
+document.addEventListener('keydown', e => {
+  const key = e.key.toUpperCase();
+  if (key === 'ENTER') {
+    e.preventDefault();
+    Game.evaluateGuess();
+    Audio.btnClick();
+  } else if (key === 'BACKSPACE') {
+    e.preventDefault();
+    Game.handleBackspace();
+    Audio.backspace();
+  } else if (/^[A-Z]$/.test(key)) {
+    Game.handleInput(key);
+    Audio.keyType();
+  }
+});
+
+document.getElementById('enter-btn').addEventListener('click', () => {
+  Game.evaluateGuess();
+  Audio.btnClick();
+});
+document.getElementById('reset-btn').addEventListener('click', () => {
+  Game.reset();
+});
+document.getElementById('hint-btn').addEventListener('click', () => {
+  Game.useHint();
+});
+
+const soundBtn = document.getElementById('sound-btn');
+soundBtn.addEventListener('click', () => {
+  const newMuted = !Audio.muted;
+  Audio.setMuted(newMuted);
+  document.getElementById('sound-icon').textContent = newMuted ? '✕' : '♪';
+  soundBtn.classList.toggle('muted', newMuted);
+  showToast(newMuted ? 'SOUND OFF' : 'SOUND ON', newMuted ? '#556688' : '#00f5ff');
+});
+
+document.getElementById('win-next-btn').addEventListener('click', () => {
+  Audio.btnClick();
+  document.getElementById('win-popup').classList.add('hidden');
+  Game.reset();
+});
+document.getElementById('lose-retry-btn').addEventListener('click', () => {
+  Audio.btnClick();
+  document.getElementById('lose-popup').classList.add('hidden');
+  Game.reset();
+});
+
+// Cabinet parallax
+document.addEventListener('mousemove', e => {
+  const cabinet = document.getElementById('arcade-cabinet');
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const dx = (e.clientX - cx) / cx;
+  const dy = (e.clientY - cy) / cy;
+  cabinet.style.transform = `perspective(1200px) rotateY(${dx * 1.5}deg) rotateX(${-dy * 1}deg)`;
+});
+document.addEventListener('mouseleave', () => {
+  document.getElementById('arcade-cabinet').style.transform = '';
+});
+
+// Lifebar animation keyframe
+const styleTag = document.createElement('style');
+styleTag.textContent = `
+  @keyframes lifeLost {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.04); }
+    60% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+`;
+document.head.appendChild(styleTag);
+
+// Boot
+function boot() {
+  Particles.init();
+  window.addEventListener('resize', () => {
+    const cc = document.getElementById('confetti-canvas');
+    cc.width = window.innerWidth;
+    cc.height = window.innerHeight;
+  });
+  Game.init();
+  updateStatsUI();
+  document.addEventListener('click', function startAudio() {
+    Audio.initAmbient();
+    document.removeEventListener('click', startAudio);
+  }, { once: true });
+  setTimeout(() => showToast('TEBAK KATA ARCADE!', '#00f5ff'), 800);
 }
 
-keyboard.addEventListener('click',(e)=>{ const btn=e.target.closest('.key-btn'); if(!btn) return; handleKeyPress(btn.dataset.key); });
-hintBtn.addEventListener('click',useHint);
-restartBtn.addEventListener('click',restartGame);
-popupOverlay.addEventListener('click',(e)=>{ if(e.target===popupOverlay){ popupOverlay.classList.remove('active'); restartGame(); } });
-
-loadStats(); createStars(); initGame();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
