@@ -157,20 +157,20 @@ body {
 .marquee-title {
   display: block;
   font-family: var(--font-pixel);
-  font-size: 0.9rem;
+  font-size: 1.6rem;
   color: var(--neon-cyan);
   text-shadow: 0 0 10px var(--neon-cyan), 0 0 25px var(--neon-cyan), 0 0 50px rgba(0,245,255,0.5);
-  letter-spacing: 2px;
+  letter-spacing: 4px;
   animation: marqueeGlow 2s ease-in-out infinite alternate;
 }
 .marquee-sub {
   display: block;
   font-family: var(--font-pixel);
-  font-size: 0.65rem;
+  font-size: 1rem;
   color: var(--neon-magenta);
   text-shadow: 0 0 8px var(--neon-magenta), 0 0 20px var(--neon-magenta);
   margin-top: 4px;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
   animation: marqueeGlow2 2.5s ease-in-out infinite alternate;
 }
 @keyframes marqueeGlow {
@@ -270,13 +270,13 @@ body {
 }
 .stat-label {
   font-family: var(--font-pixel);
-  font-size: 0.38rem;
+  font-size: 0.55rem;
   color: var(--text-dim);
   letter-spacing: 1px;
 }
 .stat-val {
   font-family: var(--font-pixel);
-  font-size: 0.7rem;
+  font-size: 1rem;
   color: var(--neon-cyan);
   text-shadow: 0 0 8px var(--neon-cyan);
 }
@@ -476,7 +476,7 @@ body {
 }
 .action-btn {
   font-family: var(--font-pixel);
-  font-size: 0.45rem;
+  font-size: 0.8rem;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
@@ -491,7 +491,7 @@ body {
   flex: 1;
   justify-content: center;
 }
-.action-btn .btn-icon { font-size: 0.7rem; }
+.action-btn .btn-icon { font-size: 1rem; }
 .action-btn::after {
   content: '';
   position: absolute;
@@ -568,8 +568,8 @@ body {
 }
 .kb-key {
   font-family: var(--font-pixel);
-  font-size: 0.5rem;
-  width: 44px; height: 40px;
+  font-size: 0.8rem;
+  width: 52px; height: 48px;
   background: linear-gradient(180deg, #1a2640 0%, #0d1828 100%);
   border: 1px solid rgba(255,255,255,0.2);
   border-bottom: 2px solid rgba(0,0,0,0.5);
@@ -588,7 +588,7 @@ body {
   box-shadow: 0 0 12px var(--neon-cyan), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .kb-key:active { transform: translateY(1px); border-bottom-width: 1px; }
-.kb-key.special-key { width: 52px; font-size: 0.7rem; }
+.kb-key.special-key { width: 60px; font-size: 1rem; }
 
 .kb-key.key-correct {
   background: linear-gradient(180deg, #0a3020 0%, #051810 100%);
