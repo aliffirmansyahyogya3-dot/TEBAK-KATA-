@@ -878,8 +878,8 @@ body {
   :root { --cabinet-width: 100%; }
   body { padding: 10px 5px 30px; }
   #cabinet-top { border-radius: 16px 16px 0 0; }
-  .marquee-title { font-size: 0.7rem; }
-  .marquee-sub { font-size: 0.5rem; }
+  .marquee-title { font-size: 5rem; }
+  .marquee-sub { font-size: 4rem; }
   .tile { width: 40px; height: 40px; font-size: 0.9rem; }
   .kb-key { width: 36px; height: 34px; font-size: 0.45rem; }
   .kb-key.special-key { width: 44px; }
