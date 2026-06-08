@@ -511,6 +511,8 @@ lockedHints.forEach((locked, i) => {
     result[i] = 'correct';
   }
 });
+    console.log("lockedHints =", lockedHints);
+console.log("result =", result);
     
 
     result.forEach((state, i) => {
@@ -619,7 +621,6 @@ lockedHints.forEach((locked, i) => {
     const tile = tileGrid[currentRow][pos];
     tile.textContent = target[pos];
     tile.classList.add(
-  'hint-reveal',
   'filled',
   'correct'
 );
