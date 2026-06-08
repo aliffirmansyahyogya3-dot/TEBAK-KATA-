@@ -617,7 +617,7 @@ const Game = (() => {
     tile.textContent = target[pos];
     tile.classList.add(
   'filled',
-  
+  'correct'
 );
     updateActiveTile();
     showToast('HINT DIGUNAKAN!', '#ffe600');
