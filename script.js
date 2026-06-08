@@ -4,55 +4,11 @@
 // WORD BANK — 200+ Indonesian words grouped by length
 // ============================================================
 const WORD_BANK = {
-  4: [
-    'BUKU','BOLA','BUAH','ANAK','NAMA','MEJA','KURSI','TAHU','SUSU','KAKI',
-    'TALI','KAYU','BATU','EMAS','PAGI','SORE','MALAM','HUJAN','ANGIN','TANAH',
-    'LAUT','SUNGAI','POHON','BUNGA','DAUN','BENIH','CAHAYA','BAYAM','KELAPA','PISANG',
-    'JERUK','APEL','MANGGA','PEPAYA','BAMBU','ROTAN','GABAH','BERAS','KETAN','BUBUR',
-    'NASI','LAUK','KUAH','GARAM','GULA','TEPUNG','KOPI','TEKI','DADU','BUKU',
-    'KUDA','SAPI','ITIK','AYAM','BEBEK','IKAN','TIKUS','KATAK','ULAR','BURUNG',
-    'PADI','SAWAH','KEBUN','HUTAN','GUNUNG','PANTAI','PULAU','KOTA','DESA','JALAN',
-    'RUMAH','PINTU','ATAP','DINDING','LANTAI','SUMUR','KOLAM','KEBAB','ROTI','MADU',
-    'TELUR','TOMAT','BAWANG','LOBAK','WORTEL','KANGKUNG','BAYAM','SAWI','CABE','KUBIS'
-  ].filter(w => w.length === 4),
-  5: [
-    'PINTU','JALAN','RUMAH','MAKAN','TIDUR','PERGI','PULANG','BERDIRI','DUDUK',
-    'BELAJAR','MENULIS','MEMBACA','BERLARI','BERMAIN','BERENANG','MEMANJAT','MELOMPAT',
-    'BURUNG','KUMBANG','SEMUT','LALAT','NYAMUK','KUCING','ANJING','MONYET','HARIMAU',
-    'GAJAH','KERBAU','DOMBA','KAMBING','RUSA','KELINCI','TUPAI','MUSANG','KIJANG',
-    'MAWAR','MELATI','KAMBOJA','ANGGREK','TERATAI','KENANGA','DAHLIA','TULIP',
-    'MATAHARI','BULAN','BINTANG','LANGIT','AWAN','PELANGI','PETIR','GUNTUR',
-    'SEKOLAH','KANTOR','PASAR','TAMAN','STADION','MASJID','GEREJA','VIHARA',
-    'PISANG','DURIAN','RAMBUTAN','MANGGIS','SALAK','PEPAYA','NANAS','SEMANGKA',
-    'SUMBER','DANAU','RAWA','PANTAI','TEBING','LEMBAH','NGARAI','PUNCAK',
-    'SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU','MINGGU',
-    'KURSI','LEMARI','KASUR','BANTAL','SELIMUT','CERMIN','MEJA','LAMPU',
-    'MERAH','HIJAU','BIRU','PUTIH','HITAM','KUNING','JINGGA','UNGU',
-    'TEMAN','SAHABAT','MUSUH','GURU','MURID','DOKTER','PETANI','NELAYAN',
-    'CINTA','RINDU','SEDIH','BAHAGIA','MARAH','TAKUT','MALU','BENCI',
-    'ANGKA','HURUF','KATA','KALIMAT','BUKU','KERTAS','PENSIL','PENGHAPUS'
-  ].filter(w => w.length === 5),
-  6: [
-    'SUNGAI','BANGUN','BANGGA','MANUSIA','NEGARA','BANGSA','BUDAYA','BAHASA',
-    'SEKOLAH','BELAJAR','ILMUAN','DOKTER','PETANI','PELAJAR','PEMIMPIN','PEJUANG',
-    'MASJID','MESJID','GEREJA','VIHARA','PURA','LANGGAR',
-    'MATAHARI','BULAN','BINTANG','PELANGI','AWAN','HUJAN','PETIR','BADAI',
-    'SAWIT','KEBUN','LADANG','HUTAN','GUNUNG','PANTAI','LAUTAN','DANAU',
-    'GAJAH','HARIMAU','KERBAU','ULAR','BUAYA','KALONG','PENYU','LUMBA',
-    'PISANG','DURIAN','NANGKA','RAMBUTAN','CEMPEDAK','LANGSAT','DUKU','MANGGIS',
-    'WORTEL','LOBAK','KANGKUNG','BAYAM','KUBIS','BROKOLI','LABU','TERUNG',
-    'MERAH','JINGGA','KUNING','HIJAU','BIRU','NILA','UNGU','PUTIH',
-    'SENIN','SELASA','KAMIS','JUMAT','SABTU','RABU','MINGGU',
-    'SATU','DUA','TIGA','EMPAT','LIMA','ENAM','TUJUH','DELAPAN',
-    'RUMPUT','SEMAK','POHON','RANTING','DAHAN','AKAR','BATANG','MAHKOTA',
-    'KEPALA','BADAN','TANGAN','KAKI','JARI','PERUT','DADA','PUNGGUNG',
-    'PINTAR','BODOH','CANTIK','TAMPAN','JELEK','BAGUS','BURUK','INDAH',
-    'CEPAT','LAMBAT','TINGGI','RENDAH','BESAR','KECIL','PANJANG','PENDEK',
-    'TERBANG','BERLARI','BERENANG','MEMANJAT','MELOMPAT','MERANGKAK','MELATA',
-    'MEMBACA','MENULIS','BERHITUNG','MENGGAMBAR','MEMASAK','BERNYANYI','MENARI',
-    'PERCAYA','YAKIN','RAGU','MALAS','RAJIN','JUJUR','BOHONG','BERANI',
-    'PULANG','PERGI','DATANG','MASUK','KELUAR','NAIK','TURUN','BELOK'
-  ].filter(w => w.length === 6)
+  4: ['acak','acar','acuh','adab','adik','adil','aduh','agak','agar','agen','ahad','ahli','ajal','ajak','ajar','akal','akan','akar','akik','alam','alas','alih','alir','alun','amal','aman','amat','anak','anda','aneh','apel','arah','arus','asah','asal','asap','asin','asli','asuh','atas','atau','atur','awan','awal','awas','ayah','ayam','ayun','babi','baca','bagi','bahu','baik','baja','baju','baki','bara','baru','basi','bata','batu','bawa','bayi','beda','beli','beri','besi','biji','biru','bisa','bisu','blus','bola','buah','buas','buat','buka','buku','bulu','bumi','buru','buta','cari','cara','cium','coba','cuci','cucu','cuka','cumi','curi','dada','dadu','daki','dara','dari','dasi','daun','daya','debu','desa','diam','diri','dosa','duit','duka','duri','edan','ekor','elok','emas','enak','erat','esok','film','foto','gaji','gali','gang','gaun','gaya','gema','gigi','gila','gula','guna','guru','gusi','halo','hama','hati','hina','hobi','hulu','idam','ikan','ikat','imam','inti','ipar','iris','isap','izin','jadi','jaga','jala','jamu','jari','jasa','jauh','jeda','jika','jiwa','juga','jawa','kaca','kail','kait','kaki','kali','kami','kamu','kata','kaya','khas','kini','kios','kiri','kita','koki','koma','kopi','kota','kuat','kuda','kuku','laba','labu','lagu','lain','laki','lalu','lama','lari','laut','lima','luar','luas','lucu','luka','lupa','maaf','madu','malu','mana','masa','mata','mati','meja','mega','muda','muka','nada','naik','nama','nasi','nila','noda','nusa','obat','olah','otak','pada','padi','pagi','paku','pala','palu','papa','para','paru','pipi','pita','raga','raja','rapi','rasa','rata','roti','rupa','saku','sama','sapi','sari','sate','satu','sepi','seru','siku','sisa','sore','suka','suku','susu','safa','tahu','tali','tamu','tani','tapa','tari','tata','tawa','tega','teko','tepi','tiga','toko','topi','uang','ubah','ucap','ukir','ukur','ular','umur','upah','usia','usir','usus','visa','wira','yang','zona']
+  5: 
+    ['acara','akhir','agama','angin','angka','aneka','asing','bebas','bebek','benar','beras','besar','besok','bijak','boleh','boros','bakar','balas','balik','basah','batas','batik','beban','bedak','bekal','bekas','belok','benci','berat','beres','bikin','bulan','bulat','bunuh','buruk','busuk','butuh','cepat','cinta','cukup','cemas','dalam','damai','dapat','darat','darah','dekat','depan','deras','didik','duduk','dunia','elang','embun','fokus','gagal','garam','garis','gatal','gelap','gemuk','gerak','gosok','gajah','garpu','gelas','gempa','gugup','habis','hadir','halus','hamil','harga','harus','hasil','hebat','hemat','hidup','hijau','hitam','hujan','hukum','hutan','ingin','ingat','istri','indah','iklan','jahat','jahit','jalur','janji','jatuh','jelas','jeruk','juara','jujur','jamur','jarum','kabar','kabel','kabur','kalah','kanan','kapan','kapal','kasih','kecil','kelas','kasar','kawin','kejam','keras','keren','koran','kubur','kunci','kursi','lalat','lampu','lawan','leher','lelah','lemah','lidah','lihat','lilin','lapar','lebar','lebih','licin','lebah','lepas','mabuk','mahal','makan','malam','mandi','manis','masak','masuk','mimpi','minum','mobil','mulai','mulut','murah','musik','musim','nanti','napas','nenek','nomor','nyata','nilai','orang','omong','pahit','panas','papan','parah','pasar','pasir','patuh','payung','pergi','pikir','pintu','putih','padam','pakai','pasti','pedas','penuh','pesta','pohon','rajin','ramah','ramai','rapat','resmi','rindu','rumah','rusak','ratus','rawat','rokok','resah','rusuk','sabar','sabun','sakit','salah','sayur','sehat','sejuk','semua','siang','sikat','singa','sopir','sulit','surat','salam','sawah','sedih','semut','sifat','suami','suara','subur','tabah','tanah','tanpa','taruh','tebal','telur','teman','terus','tetap','tidur','tikar','tubuh','tulis','turun','tanda','tahan','takut','tanam','tarik','tepat','tinju','tinta','tahun','udara','ujian','untuk','ulima','video','virus','wajah','waktu','wangi','warna','warga','wajib','wakil','yatim','zakat']
+  6: 
+    ['adalah','adapun','alasan','aliran','anjing','antara','aturan','ayunan','banyak','bangun','bayang','bentuk','berisi','berkat','bilang','budaya','cabang','campur','cantik','cerita','cerdas','daftar','daging','dampak','dengan','daerah','dengar','dingin','enteng','gambar','gedung','gunung','hadiah','hancur','hantam','hilang','hormat','hanyut','jangan','jemput','jumlah','kacang','karena','karung','kepala','kereta','kertas','ketika','kompor','kucing','kuning','lambat','langit','lempar','lintas','loncat','lombok','lumpur','mangga','melati','memang','mereka','menang','negara','nikmat','nyanyi','pandai','panjang','panjat','pantai','pegang','pendek','perahu','pintar','pensil','pisang','polisi','potong','pulang','pusaka','rambut','rakyat','rantai','remaja','rendah','ribuan','rumput','sampai','sandal','sangat','sarang','sarung','selalu','sempit','senang','sendok','sering','sesuai','setiap','silang','simpan','sumpah','sungai','tambah','tampil','tangan','tangis','tembus','tempat','terang','terbang','terima','tetapi','timbul','tindak','tolong','tumbuh','tumbuk','tunggu','tunjuk','ucapan','undang','untung','warung','wisuda']
 };
 
 Object.keys(WORD_BANK).forEach(k => {
