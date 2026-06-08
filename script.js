@@ -5,13 +5,13 @@
 // ============================================================
 const WORD_BANK = {
   4: [
-'ACAK','ACAR','ACUH','ADAB','ADIK','ADIL','ADUH','AGAK','AGAR','AGEN','AHAD','AHLI','AJAL','AJAK','AJAR','AKAL','AKAN','AKAR','AKIK','ALAM','ALAS','ALIH','ALIR','ALUN','AMAL','AMAN','AMAT','ANAK','ANDA','ANEH','APEL','ARAH','ARUS','ASAH','ASAL','ASAP','ASIN','ASLI','ASUH','ATAS','ATAU','ATUR','AWAN','AWAL','AWAS','AYAH','AYAM','AYUN','BABI','BACA','BAGI','BAHU','BAIK','BAJA','BAJU','BAKI','BARA','BARU','BASI','BATA','BATU','BAWA','BAYI','BEDA','BELI','BERI','BESI','BIJI','BIRU','BISA','BISU','BLUS','BOLA','BUAH','BUAS','BUAT','BUDI','BUKA','BUKU','BULU','BUMI','BURU','BUTA','CARI','CARA','CIUM','COBA','CUCI','CUCU','CUKA','CUMI','CURI','DADA','DADU','DAKI','DARA','DARI','DASI','DAUN','DAYA','DEBU','DESA','DIAM','DIRI','DOSA','DUIT','DUKA','DURI','EDAN','EKOR','ELOK','EMAS','ENAK','ERAT','ESOK','FILM','FOTO','GAJI','GALI','GANG','GAUN','GAYA','GEMA','GIGI','GILA','GULA','GUNA','GURU','GUSI','HALO','HAMA','HATI','HINA','HOBI','HULU','IDAM','IKAN','IKAT','IMAM','INTI','IPAR','IRI','IRIS','ISAP','IZIN','JADI','JAGA','JALA','JAMU','JARI','JASA','JAUH','JEDA','JIKA','JIWA','JUGA','JAWA','KACA','KAIL','KAIT','KAKI','KALI','KAMI','KAMU','KATA','KAYA','KHAS','KINI','KIOS','KIRI','KITA','KOKI','KOMA','KOPI','KOTA','KUAT','KUDA','KUKU','LABA','LABU','LAGU','LAIN','LAKI','LALU','LAMA','LARI','LAUT','LIMA','LUAR','LUAS','LUCU','LUKA','LUPA','MAAF','MADU','MALU','MANA','MASA','MATA','MATI','MEJA','MEGA','MUDA','MUKA','NADA','NAIK','NAMA','NASI','NILA','NODA','NUSA','OBAT','OLAH','OTAK','PADA','PADI','PAGI','PAKU','PALA','PALU','PAPA','PARA','PARU','PIPI','PITA','RAGA','RAJA','RAPI','RASA','RATA','ROTI','RUPA','SAKU','SAMA','SAPI','SARI','SATE','SATU','SEPI','SERU','SIKU','SISA','SORE','SUKA','SUKU','SUSU','SAFA','TAHU','TALI','TAMU','TANI','TAPA','TARI','TATA','TAWA','TEGA','TEKO','TEPI','TIGA','TOKO','TOPI','UANG','UBAH','UCAP','UKIR','UKUR','ULAR','UMUR','UPAH','USIA','USIR','USUS','VISA','WIRA','YANG','ZONA'
+'ACAK','ACAR','ACUH','ADAB','ADIK','ADIL','ADUH','AGAK','AGAR','AGEN','AHAD','AHLI','AJAL','AJAK','AJAR','AKAL','AKAN','AKAR','AKIK','ALAM','ALAS','ALIH','ALIR','ALUN','AMAL','AMAN','AMAT','ANAK','ANDA','ANEH','APEL','ARAH','ARUS','ASAH','ASAL','ASAP','ASIN','ASLI','ASUH','ATAS','ATAU','ATUR','AWAN','AWAL','AWAS','AYAH','AYAM','AYUN','BABI','BACA','BAGI','BAHU','BAIK','BAJA','BAJU','BAKI','BARA','BARU','BASI','BATA','BATU','BAWA','BAYI','BEDA','BELI','BERI','BESI','BIJI','BIRU','BISA','BISU','BLUS','BOLA','BUAH','BUAS','BUAT','BUDI','BUKA','BUKU','BULU','BUMI','BURU','BUTA','CARI','CARA','CIUM','COBA','CUCI','CUCU','CUKA','CUMI','CURI','DADA','DADU','DAKI','DARA','DARI','DASI','DAUN','DAYA','DEBU','DESA','DIAM','DIRI','DOSA','DUIT','DUKA','DURI','EDAN','EKOR','ELOK','EMAS','ENAK','ERAT','ESOK','FILM','FOTO','GAJI','GALI','GANG','GAUN','GAYA','GEMA','GIGI','GILA','GULA','GUNA','GURU','GUSI','HALO','HAMA','HATI','HINA','HOBI','HULU','IDAM','IKAN','IKAT','IMAM','INTI','IPAR','IRIS','ISAP','IZIN','JADI','JAGA','JALA','JAMU','JARI','JASA','JAUH','JEDA','JIKA','JIWA','JUGA','JAWA','KACA','KAIL','KAIT','KAKI','KALI','KAMI','KAMU','KATA','KAYA','KHAS','KINI','KIOS','KIRI','KITA','KOKI','KOMA','KOPI','KOTA','KUAT','KUDA','KUKU','LABA','LABU','LAGU','LAIN','LAKI','LALU','LAMA','LARI','LAUT','LIMA','LUAR','LUAS','LUCU','LUKA','LUPA','MAAF','MADU','MALU','MANA','MASA','MATA','MATI','MEJA','MEGA','MUDA','MUKA','NADA','NAIK','NAMA','NASI','NILA','NODA','NUSA','OBAT','OLAH','OTAK','PADA','PADI','PAGI','PAKU','PALA','PALU','PAPA','PARA','PARU','PIPI','PITA','RAGA','RAJA','RAPI','RASA','RATA','ROTI','RUPA','SAKU','SAMA','SAPI','SARI','SATE','SATU','SEPI','SERU','SIKU','SISA','SORE','SUKA','SUKU','SUSU','SAFA','TAHU','TALI','TAMU','TANI','TAPA','TARI','TATA','TAWA','TEGA','TEKO','TEPI','TIGA','TOKO','TOPI','UANG','UBAH','UCAP','UKIR','UKUR','ULAR','UMUR','UPAH','USIA','USIR','USUS','VISA','WIRA','YANG','ZONA'
   ].filter(w => w.length === 4),
   5: [
 'ACARA','AKHIR','AGAMA','ANGIN','ANGKA','ANEKA','ASING','BEBAS','BEBEK','BENAR','BERAS','BESAR','BESOK','BIJAK','BOLEH','BOROS','BAKAR','BALAS','BALIK','BASAH','BATAS','BATIK','BEBAN','BEDAK','BEKAL','BEKAS','BELOK','BENCI','BERAT','BERES','BIKIN','BULAN','BULAT','BUNUH','BURUK','BUSUK','BUTUH','CEPAT','CINTA','CUKUP','CEMAS','DALAM','DAMAI','DAPAT','DARAT','DARAH','DEKAT','DEPAN','DERAS','DIDIK','DUDUK','DUNIA','ELANG','EMBUN','FOKUS','GAGAL','GARAM','GARIS','GATAL','GELAP','GEMUK','GERAK','GOSOK','GAJAH','GARPU','GELAS','HABIS','HADIR','HALUS','HAMIL','HARGA','HARUS','HASIL','HEBAT','HEMAT','HIDUP','HIJAU','HITAM','HUJAN','HUKUM','HUTAN','INGIN','INGAT','ISTRI','INDAH','IKLAN','JAHAT','JAHIT','JALUR','JANJI','JATUH','JELAS','JERUK','JUARA','JUJUR','JAMUR','JARUM','KABAR','KABEL','KABUR','KALAH','KANAN','KAPAN','KAPAL','KASIH','KECIL','KELAS','KASAR','KAWIN','KEJAM','KERAS','KEREN','KORAN','KUBUR','KUNCI','KURSI','LALAT','LAMPU','LAWAN','LEHER','LELAH','LEMAH','LIDAH','LIHAT','LILIN','LAPAR','LEBAR','LEBIH','LICIN','MABUK','MAHAL','MAKAN','MALAM','MANDI','MANIS','MASAK','MASUK','MIMPI','MINUM','MOBIL','MULAI','MULUT','MURAH','MUSIK','MUSIM','NANTI','NAPAS','NENEK','NOMOR','NYATA','NILAI','ORANG','OMONG','PAHIT','PANAS','PAPAN','PARAH','PASAR','PASIR','PATUH','PAYUNG','PERGI','PIKIR','PINTU','PUTIH','PADAM','PAKAI','PASTI','PEDAS','PENUH','PESTA','POHON','RAJIN','RAMAH','RAMAI','RAPAT','RESMI','RINDU','RUMAH','RUSAK','RATUS','RAWAT','ROKOK','SABAR','SABUN','SAKIT','SALAH','SAYUR','SEHAT','SEJUK','SEMUA','SIANG','SIKAT','SINGA','SOPIR','SULIT','SURAT','SALAM','SAWAH','SEDIH','SEMUT','SIFAT','SUAMI','SUARA','SUBUR','TABAH','TANAH','TANPA','TARUH','TEBAL','TELUR','TEMAN','TERUS','TETAP','TIDUR','TIKAR','TUBUH','TULIS','TURUN','TANDA','TAHAN','TAKUT','TANAM','TARIK','TEPAT','TINJU','TINTA','UDARA','UJIAN','UNTUK','VIDEO','VIRUS','WAJAH','WAKTU','WANGI','WARNA','WARGA','WAJIB','WAKIL','YATIM','ZAKAT'
   ].filter(w => w.length === 5),
   6: [
-'ADALAH','ADAPUN','ALASAN','ALIRAN','ANJING','ANTARA','ATURAN','AYUNAN','BANYAK','BANGUN','BAYANG','BENTUK','BERISI','BERKAT','BILANG','BUDAYA','CABANG','CAMPUR','CANTIK','CERITA','CERDAS','DAFTAR','DAGING','DAMPAK','DENGAN','DAERAH','DENGAR','DINGIN','ENTENG','GAMBAR','GEDUNG','GUNUNG','HADIAH','HANCUR','HANTAM','HILANG','HORMAT','HANYUT','JANGAN','JEMPUT','JUMLAH','KACANG','KARENA','KARUNG','KEPALA','KERETA','KERTAS','KETIKA','KOMPOR','KUCING','KUNING','LAMBAT','LANGIT','LEMPAR','LINTAS','LONCAT','LOMBOK','LUMPUR','MANGGA','MELATI','MEMANG','MEREKA','MENANG','NEGARA','NIKMAT','NYANYI','PANDAI','PANJANG','PANJAT','PANTAI','PEGANG','PENDEK','PERAHU','PINTAR','PISANG','POLISI','POTONG','PULANG','PUSAKA','RAMBUT','RAKYAT','RANTAI','REMAJA','RENDAH','RIBUAN','RUMPUT','SAMPAI','SANDAL','SANGAT','SARANG','SARUNG','SELALU','SEMPIT','SENANG','SENDOK','SERING','SESUAI','SETIAP','SILANG','SIMPAN','SUMPAH','SUNGAI','TAMBAH','TAMPIL','TANGAN','TANGIS','TEMBUS','TEMPAT','TERANG','TERBANG','TERIMA','TETAPI','TIMBUL','TINDAK','TOLONG','TUMBUH','TUMBUK','TUNGGU','TUNJUK','UCAPAN','UNDANG','UNTUNG','WARUNG','WISUDA'
+'ADALAH','ADAPUN','ALASAN','ALIRAN','ANJING','ANTARA','ATURAN','AYUNAN','BANYAK','BANGUN','BAYANG','BENTUK','BERISI','BERKAT','BILANG','BUDAYA','CABANG','CAMPUR','CANTIK','CERITA','CERDAS','DAFTAR','DAGING','DAMPAK','DENGAN','DAERAH','DENGAR','DINGIN','ENTENG','GAMBAR','GEDUNG','GUNUNG','HADIAH','HANCUR','HANTAM','HILANG','HORMAT','HANYUT','JANGAN','JEMPUT','JUMLAH','KACANG','KARENA','KARUNG','KEPALA','KERETA','KERTAS','KETIKA','KOMPOR','KUCING','KUNING','LAMBAT','LANGIT','LEMPAR','LINTAS','LONCAT','LOMBOK','LUMPUR','MANGGA','MELATI','MEMANG','MEREKA','MENANG','NEGARA','NIKMAT','NYANYI','PANDAI','PANJAT','PANTAI','PEGANG','PENDEK','PERAHU','PINTAR','PISANG','POLISI','POTONG','PULANG','PUSAKA','RAMBUT','RAKYAT','RANTAI','REMAJA','RENDAH','RIBUAN','RUMPUT','SAMPAI','SANDAL','SANGAT','SARANG','SARUNG','SELALU','SEMPIT','SENANG','SENDOK','SERING','SESUAI','SETIAP','SILANG','SIMPAN','SUMPAH','SUNGAI','TAMBAH','TAMPIL','TANGAN','TANGIS','TEMBUS','TEMPAT','TERANG','TERIMA','TETAPI','TIMBUL','TINDAK','TOLONG','TUMBUH','TUMBUK','TUNGGU','TUNJUK','UCAPAN','UNDANG','UNTUNG','WARUNG','WISUDA'
   ].filter(w => w.length === 6)
 };
 
@@ -20,7 +20,7 @@ Object.keys(WORD_BANK).forEach(k => {
 });
 
 // ============================================================
-// AUDIO ENGINE — lebih satisfying
+// AUDIO ENGINE
 // ============================================================
 const Audio = (() => {
   let ctx = null;
@@ -75,7 +75,7 @@ const Audio = (() => {
       filter.frequency.value = 200;
       ambientOsc.type = 'sawtooth';
       ambientOsc.frequency.value = 55;
-      ambientGain.gain.value = 0.06; // lebih keras
+      ambientGain.gain.value = 0.06;
       ambientOsc.connect(filter);
       filter.connect(ambientGain);
       ambientGain.connect(c.destination);
@@ -338,23 +338,22 @@ function updateLifebar(lives, maxLives) {
 }
 
 // ============================================================
-// GAME CORE — input yang sudah diperbaiki
+// GAME CORE
 // ============================================================
 const Game = (() => {
   let targetWord = '';
   let wordLength = 5;
   let currentRow = 0;
-  let currentInput = [];   // array of chars, length = wordLength, diisi '' untuk kosong
+  let currentInput = [];   // array panjang wordLength, '' = kosong
   let maxRows = 6;
   let lives = 6;
   let hintUsed = false;
   let gameOver = false;
   let tileGrid = [];
-  let lockedHints = [];
+  let lockedHints = [];    // true = slot ini diisi hint, tidak boleh dihapus
 
   function init() {
-    // Acak panjang kata, pemain tidak bisa pilih
-    const lengths = [4,5,6];
+    const lengths = [4, 5, 6];
     wordLength = lengths[Math.floor(Math.random() * lengths.length)];
     targetWord = pickWord(wordLength);
     currentRow = 0;
@@ -445,20 +444,31 @@ const Game = (() => {
     }
   }
 
-  // Cari tile kosong pertama untuk active
+  // ============================================================
+  // FIX: updateActiveTile — cari slot kosong pertama dari kiri.
+  // lockedHints sudah terisi di currentInput, jadi tidak akan
+  // terpilih sebagai 'kosong'. Tidak perlu cek lockedHints di sini.
+  // ============================================================
   function updateActiveTile() {
-    const activeIdx = currentInput.findIndex(
-  (ch, i) => ch === '' && !lockedHints[i]
-);
-    tileGrid[currentRow].forEach((tile, i) => {
-      tile.classList.toggle('active', i === activeIdx);
-    });
+    // Hapus semua active dulu
+    tileGrid[currentRow].forEach(tile => tile.classList.remove('active'));
+
+    // Cari index '' pertama dari kiri
+    const activeIdx = currentInput.indexOf('');
+
+    // Jika ada slot kosong, tandai active
+    if (activeIdx !== -1) {
+      tileGrid[currentRow][activeIdx].classList.add('active');
+    }
   }
 
+  // ============================================================
+  // FIX: handleInput — isi slot '' pertama dari kiri
+  // ============================================================
   function handleInput(letter) {
     if (gameOver) return;
     const idx = currentInput.indexOf('');
-    if (idx === -1) return; // penuh
+    if (idx === -1) return; // semua terisi
     currentInput[idx] = letter.toUpperCase();
     const tile = tileGrid[currentRow][idx];
     tile.textContent = letter.toUpperCase();
@@ -466,33 +476,33 @@ const Game = (() => {
     updateActiveTile();
   }
 
+  // ============================================================
+  // FIX: handleBackspace — hapus huruf terakhir yang bukan hint.
+  // Cari dari KANAN, skip lockedHints[i] === true.
+  // Setelah hapus, panggil updateActiveTile() untuk update kursor.
+  // ============================================================
   function handleBackspace() {
-  if (gameOver) return;
+    if (gameOver) return;
 
-  let idx = -1;
-
-  for (let i = currentInput.length - 1; i >= 0; i--) {
-    if (
-      currentInput[i] !== '' &&
-      !lockedHints[i]
-    ) {
-      idx = i;
-      break;
+    // Cari dari kanan: slot terisi yang bukan hint
+    let idx = -1;
+    for (let i = currentInput.length - 1; i >= 0; i--) {
+      if (currentInput[i] !== '' && !lockedHints[i]) {
+        idx = i;
+        break;
+      }
     }
+
+    if (idx === -1) return; // tidak ada yang bisa dihapus
+
+    // Hapus dari data dan tile
+    currentInput[idx] = '';
+    const tile = tileGrid[currentRow][idx];
+    tile.textContent = '';
+    tile.classList.remove('filled');
+    // Jangan remove 'active' manual di sini — biarkan updateActiveTile yang atur
+    updateActiveTile();
   }
-
-  if (idx === -1) return;
-
-  currentInput[idx] = '';
-
-  const tile = tileGrid[currentRow][idx];
-  tile.textContent = '';
-  tile.classList.remove('filled', 'active');
-
-  updateActiveTile();
-
-  }
-  
 
   function evaluateGuess() {
     if (gameOver) return;
@@ -504,18 +514,12 @@ const Game = (() => {
     }
     const guess = currentInput.join('').toUpperCase();
     const target = targetWord.toUpperCase();
-    let result = computeResult(guess, target);
-
-
-    
-    
+    const result = computeResult(guess, target);
 
     result.forEach((state, i) => {
       const tile = tileGrid[currentRow][i];
       setTimeout(() => {
-        tile.classList.remove('active');
-        // Hapus hint-reveal agar tidak konflik warna
-        tile.classList.remove('hint-reveal');
+        tile.classList.remove('active', 'hint-reveal');
         tile.classList.add('flip-reveal');
         setTimeout(() => {
           tile.classList.remove('flip-reveal');
@@ -561,6 +565,7 @@ const Game = (() => {
         } else {
           currentRow++;
           currentInput = new Array(wordLength).fill('');
+          lockedHints = new Array(wordLength).fill(false); // reset hint lock untuk baris baru
           if (currentRow < maxRows) {
             updateActiveTile();
           }
@@ -568,7 +573,7 @@ const Game = (() => {
       }
     }, totalDelay);
 
-    currentInput = new Array(wordLength).fill(''); // clear buffer segera
+    currentInput = new Array(wordLength).fill('');
   }
 
   function computeResult(guess, target) {
@@ -603,23 +608,25 @@ const Game = (() => {
     Audio.hint();
 
     const target = targetWord.toUpperCase();
-    // Cari posisi yang masih kosong di currentInput
+    // Cari posisi yang masih kosong
     const emptyPositions = [];
     for (let i = 0; i < wordLength; i++) {
       if (currentInput[i] === '') emptyPositions.push(i);
     }
-    if (emptyPositions.length === 0) return;
+    if (emptyPositions.length === 0) {
+      showToast('SEMUA SUDAH TERISI!', '#ffe600');
+      return;
+    }
 
     const pos = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
     currentInput[pos] = target[pos];
-    lockedHints[pos] = true;
+    lockedHints[pos] = true; // tandai: tidak boleh dihapus backspace
+
     const tile = tileGrid[currentRow][pos];
     tile.textContent = target[pos];
-    tile.classList.add(
-  'filled',
-  'correct'
-);
-    updateActiveTile();
+    tile.classList.add('filled', 'hint-reveal');
+
+    updateActiveTile(); // update kursor ke slot kosong berikutnya
     showToast('HINT DIGUNAKAN!', '#ffe600');
   }
 
@@ -709,7 +716,6 @@ document.getElementById('lose-retry-btn').addEventListener('click', () => {
   Game.reset();
 });
 
-// Cabinet parallax
 document.addEventListener('mousemove', e => {
   const cabinet = document.getElementById('arcade-cabinet');
   const cx = window.innerWidth / 2;
@@ -722,7 +728,6 @@ document.addEventListener('mouseleave', () => {
   document.getElementById('arcade-cabinet').style.transform = '';
 });
 
-// Lifebar animation keyframe
 const styleTag = document.createElement('style');
 styleTag.textContent = `
   @keyframes lifeLost {
@@ -734,7 +739,6 @@ styleTag.textContent = `
 `;
 document.head.appendChild(styleTag);
 
-// Boot
 function boot() {
   Particles.init();
   window.addEventListener('resize', () => {
