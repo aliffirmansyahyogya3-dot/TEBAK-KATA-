@@ -157,7 +157,7 @@ body {
 .marquee-title {
   display: block;
   font-family: var(--font-pixel);
-  font-size: 1.6rem;
+  font-size: 7rem;
   color: var(--neon-cyan);
   text-shadow: 0 0 10px var(--neon-cyan), 0 0 25px var(--neon-cyan), 0 0 50px rgba(0,245,255,0.5);
   letter-spacing: 4px;
@@ -166,7 +166,7 @@ body {
 .marquee-sub {
   display: block;
   font-family: var(--font-pixel);
-  font-size: 1rem;
+  font-size: 6rem;
   color: var(--neon-magenta);
   text-shadow: 0 0 8px var(--neon-magenta), 0 0 20px var(--neon-magenta);
   margin-top: 4px;
