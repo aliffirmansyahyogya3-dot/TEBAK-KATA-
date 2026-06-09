@@ -33,13 +33,11 @@ const Audio = (() => {
     return ctx;
   }
 
-  // FIX #1: tambah `const osc = c.createOscillator();` yang hilang
   function beep(freq, type, duration, vol = 0.15, startTime = 0) {
     if (muted) return;
     const c = getCtx();
     const t = c.currentTime + startTime;
-
-    const osc = c.createOscillator(); // ← FIX: osc harus dibuat dulu
+    const osc = c.createOscillator();
     const gain = c.createGain();
     osc.connect(gain); gain.connect(c.destination);
     osc.type = type;
@@ -66,7 +64,6 @@ const Audio = (() => {
     src.start(); src.stop(c.currentTime + duration);
   }
 
-  // FIX #2: hapus `}` nyasar setelah startAmbient — sekarang bersih
   function startAmbient() {}
 
   function stopAmbient() {
@@ -323,13 +320,13 @@ const Game = (() => {
   let targetWord = '';
   let wordLength = 5;
   let currentRow = 0;
-  let currentInput = [];   // array panjang wordLength, '' = kosong
+  let currentInput = [];
   let maxRows = 6;
   let lives = 6;
   let hintUsed = false;
   let gameOver = false;
   let tileGrid = [];
-  let lockedHints = [];    // true = slot ini diisi hint, tidak boleh dihapus
+  let lockedHints = [];
 
   function init() {
     const lengths = [4, 5, 6];
@@ -496,7 +493,6 @@ const Game = (() => {
     const allCorrect = result.every(s => s === 'correct');
     const totalDelay = wordLength * 80 + 350;
 
-    // FIX #3: hapus reset currentInput di luar timeout — biarkan hanya di dalam blok else
     setTimeout(() => {
       if (allCorrect) {
         gameOver = true;
@@ -555,6 +551,14 @@ const Game = (() => {
     return result;
   }
 
+  // ============================================================
+  // FIX useHint: satu logika bersih — pilih slot yang:
+  //   1. belum di-hint (lockedHints[i] === false)
+  //   2. belum benar di baris sebelumnya (tile row < currentRow tidak .correct)
+  //   3. kosong di baris sekarang (currentInput[i] === '')
+  // Kalau tidak ada slot kosong yang memenuhi syarat, isi slot
+  // yang sudah terisi tapi bukan hint (overwrite diperbolehkan).
+  // ============================================================
   function useHint() {
     if (gameOver || hintUsed) return;
     hintUsed = true;
@@ -562,41 +566,37 @@ const Game = (() => {
     Audio.hint();
 
     const target = targetWord.toUpperCase();
-    const availablePositions = [];
 
-for (let i = 0; i < wordLength; i++) {
-  // jangan pilih posisi yang sudah dihint
-  if (lockedHints[i]) continue;
+    // Kumpulkan posisi yang layak di-hint:
+    // - bukan sudah locked hint
+    // - posisi itu belum terbukti 'correct' di baris sebelumnya
+    const candidatePositions = [];
+    for (let i = 0; i < wordLength; i++) {
+      if (lockedHints[i]) continue;
 
-  // jangan pilih posisi yang sudah diketahui benar dari tebakan sebelumnya
-  let alreadyCorrect = false;
+      // Cek apakah posisi ini sudah terbukti benar dari baris sebelumnya
+      let alreadyKnown = false;
+      for (let row = 0; row < currentRow; row++) {
+        if (tileGrid[row][i].classList.contains('correct')) {
+          alreadyKnown = true;
+          break;
+        }
+      }
+      if (alreadyKnown) continue;
 
-  for (let row = 0; row < currentRow; row++) {
-    const tile = tileGrid[row][i];
-
-    if (tile.classList.contains('correct')) {
-      alreadyCorrect = true;
-      break;
+      candidatePositions.push(i);
     }
-  }
 
-  if (!alreadyCorrect) {
-    availablePositions.push(i);
-  }
-}
-
-if (availablePositions.length === 0) return;
-
-const pos =
-  availablePositions[
-    Math.floor(Math.random() * availablePositions.length)
-  ];
-    if (emptyPositions.length === 0) {
-      showToast('SEMUA SUDAH TERISI!', '#ffe600');
+    if (candidatePositions.length === 0) {
+      showToast('TIDAK ADA HINT TERSEDIA!', '#ffe600');
       return;
     }
 
-    const pos = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
+    // Prioritaskan slot kosong dulu; kalau tidak ada, pilih dari semua kandidat
+    const emptyAmongCandidates = candidatePositions.filter(i => currentInput[i] === '');
+    const pool = emptyAmongCandidates.length > 0 ? emptyAmongCandidates : candidatePositions;
+
+    const pos = pool[Math.floor(Math.random() * pool.length)];
     currentInput[pos] = target[pos];
     lockedHints[pos] = true;
 
