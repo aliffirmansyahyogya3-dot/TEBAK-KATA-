@@ -562,10 +562,35 @@ const Game = (() => {
     Audio.hint();
 
     const target = targetWord.toUpperCase();
-    const emptyPositions = [];
-    for (let i = 0; i < wordLength; i++) {
-      if (currentInput[i] === '') emptyPositions.push(i);
+    const availablePositions = [];
+
+for (let i = 0; i < wordLength; i++) {
+  // jangan pilih posisi yang sudah dihint
+  if (lockedHints[i]) continue;
+
+  // jangan pilih posisi yang sudah diketahui benar dari tebakan sebelumnya
+  let alreadyCorrect = false;
+
+  for (let row = 0; row < currentRow; row++) {
+    const tile = tileGrid[row][i];
+
+    if (tile.classList.contains('correct')) {
+      alreadyCorrect = true;
+      break;
     }
+  }
+
+  if (!alreadyCorrect) {
+    availablePositions.push(i);
+  }
+}
+
+if (availablePositions.length === 0) return;
+
+const pos =
+  availablePositions[
+    Math.floor(Math.random() * availablePositions.length)
+  ];
     if (emptyPositions.length === 0) {
       showToast('SEMUA SUDAH TERISI!', '#ffe600');
       return;
