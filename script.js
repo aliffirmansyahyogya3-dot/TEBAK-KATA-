@@ -63,7 +63,30 @@ const Audio = (() => {
     gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
     src.start(); src.stop(c.currentTime + duration);
   }
-
+function startAmbient() {
+    if (muted || ambientOsc) return;
+    try {
+      const c = getCtx();
+      ambientOsc = c.createOscillator();
+      ambientGain = c.createGain();
+      const filter = c.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 200;
+      ambientOsc.type = 'sawtooth';
+      ambientOsc.frequency.value = 55;
+      ambientGain.gain.value = 0.06; // lebih keras
+      ambientOsc.connect(filter);
+      filter.connect(ambientGain);
+      ambientGain.connect(c.destination);
+      ambientOsc.start();
+      const lfo = c.createOscillator();
+      const lfoGain = c.createGain();
+      lfo.frequency.value = 0.3;
+      lfoGain.gain.value = 0.02;
+      lfo.connect(lfoGain);
+      lfoGain.connect(ambientGain.gain);
+      lfo.start();
+    } catch(e) {}
   
   }
 
