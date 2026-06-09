@@ -33,14 +33,16 @@ const Audio = (() => {
     return ctx;
   }
 
+  // FIX #1: tambah `const osc = c.createOscillator();` yang hilang
   function beep(freq, type, duration, vol = 0.15, startTime = 0) {
     if (muted) return;
     const c = getCtx();
     const t = c.currentTime + startTime;
-    
+
+    const osc = c.createOscillator(); // ← FIX: osc harus dibuat dulu
     const gain = c.createGain();
     osc.connect(gain); gain.connect(c.destination);
-   osc.type = type;
+    osc.type = type;
     osc.frequency.setValueAtTime(freq, t);
     gain.gain.setValueAtTime(0, t);
     gain.gain.linearRampToValueAtTime(vol, t + 0.01);
@@ -64,11 +66,11 @@ const Audio = (() => {
     src.start(); src.stop(c.currentTime + duration);
   }
 
+  // FIX #2: hapus `}` nyasar setelah startAmbient — sekarang bersih
   function startAmbient() {}
-  }
 
   function stopAmbient() {
-   if (ambientOsc) { try { ambientOsc.stop(); } catch(e) {} ambientOsc = null; }
+    if (ambientOsc) { try { ambientOsc.stop(); } catch(e) {} ambientOsc = null; }
   }
 
   return {
@@ -421,31 +423,18 @@ const Game = (() => {
     }
   }
 
-  // ============================================================
-  // FIX: updateActiveTile — cari slot kosong pertama dari kiri.
-  // lockedHints sudah terisi di currentInput, jadi tidak akan
-  // terpilih sebagai 'kosong'. Tidak perlu cek lockedHints di sini.
-  // ============================================================
   function updateActiveTile() {
-    // Hapus semua active dulu
     tileGrid[currentRow].forEach(tile => tile.classList.remove('active'));
-
-    // Cari index '' pertama dari kiri
     const activeIdx = currentInput.indexOf('');
-
-    // Jika ada slot kosong, tandai active
     if (activeIdx !== -1) {
       tileGrid[currentRow][activeIdx].classList.add('active');
     }
   }
 
-  // ============================================================
-  // FIX: handleInput — isi slot '' pertama dari kiri
-  // ============================================================
   function handleInput(letter) {
     if (gameOver) return;
     const idx = currentInput.indexOf('');
-    if (idx === -1) return; // semua terisi
+    if (idx === -1) return;
     currentInput[idx] = letter.toUpperCase();
     const tile = tileGrid[currentRow][idx];
     tile.textContent = letter.toUpperCase();
@@ -453,15 +442,8 @@ const Game = (() => {
     updateActiveTile();
   }
 
-  // ============================================================
-  // FIX: handleBackspace — hapus huruf terakhir yang bukan hint.
-  // Cari dari KANAN, skip lockedHints[i] === true.
-  // Setelah hapus, panggil updateActiveTile() untuk update kursor.
-  // ============================================================
   function handleBackspace() {
     if (gameOver) return;
-
-    // Cari dari kanan: slot terisi yang bukan hint
     let idx = -1;
     for (let i = currentInput.length - 1; i >= 0; i--) {
       if (currentInput[i] !== '' && !lockedHints[i]) {
@@ -469,15 +451,11 @@ const Game = (() => {
         break;
       }
     }
-
-    if (idx === -1) return; // tidak ada yang bisa dihapus
-
-    // Hapus dari data dan tile
+    if (idx === -1) return;
     currentInput[idx] = '';
     const tile = tileGrid[currentRow][idx];
     tile.textContent = '';
     tile.classList.remove('filled');
-    // Jangan remove 'active' manual di sini — biarkan updateActiveTile yang atur
     updateActiveTile();
   }
 
@@ -518,6 +496,7 @@ const Game = (() => {
     const allCorrect = result.every(s => s === 'correct');
     const totalDelay = wordLength * 80 + 350;
 
+    // FIX #3: hapus reset currentInput di luar timeout — biarkan hanya di dalam blok else
     setTimeout(() => {
       if (allCorrect) {
         gameOver = true;
@@ -542,15 +521,13 @@ const Game = (() => {
         } else {
           currentRow++;
           currentInput = new Array(wordLength).fill('');
-          lockedHints = new Array(wordLength).fill(false); // reset hint lock untuk baris baru
+          lockedHints = new Array(wordLength).fill(false);
           if (currentRow < maxRows) {
             updateActiveTile();
           }
         }
       }
     }, totalDelay);
-
-    currentInput = new Array(wordLength).fill('');
   }
 
   function computeResult(guess, target) {
@@ -585,7 +562,6 @@ const Game = (() => {
     Audio.hint();
 
     const target = targetWord.toUpperCase();
-    // Cari posisi yang masih kosong
     const emptyPositions = [];
     for (let i = 0; i < wordLength; i++) {
       if (currentInput[i] === '') emptyPositions.push(i);
@@ -597,13 +573,13 @@ const Game = (() => {
 
     const pos = emptyPositions[Math.floor(Math.random() * emptyPositions.length)];
     currentInput[pos] = target[pos];
-    lockedHints[pos] = true; // tandai: tidak boleh dihapus backspace
+    lockedHints[pos] = true;
 
     const tile = tileGrid[currentRow][pos];
     tile.textContent = target[pos];
     tile.classList.add('filled', 'hint-reveal');
 
-    updateActiveTile(); // update kursor ke slot kosong berikutnya
+    updateActiveTile();
     showToast('HINT DIGUNAKAN!', '#ffe600');
   }
 
