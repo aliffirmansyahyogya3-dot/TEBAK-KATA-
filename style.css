@@ -414,7 +414,7 @@ body {
   box-shadow: 0 0 4px rgba(255,34,85,0.15);
 }
 .tile.hint-reveal {
-  background: #2e2800;
+  background: #0a3d1c;
   border-color: var(--neon-green);
   color: var(--neon-green);
   text-shadow: 0 0 12px var(--neon-green), 0 0 25px var(--neon-green);
