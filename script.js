@@ -27,10 +27,10 @@ const Audio = (() => {
   let muted = false;
   let ambientOsc = null, ambientGain = null;
 
- // function getCtx() {
- //   if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
- //   if (ctx.state === 'suspended') ctx.resume();
-   // return ctx;
+  function getCtx() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
   }
 
   function beep(freq, type, duration, vol = 0.15, startTime = 0) {
@@ -40,7 +40,7 @@ const Audio = (() => {
     
  //   const gain = c.createGain();
    // osc.connect(gain); gain.connect(c.destination);
-  // osc.type = type;
+   osc.type = type;
    // osc.frequency.setValueAtTime(freq, t);
  //   gain.gain.setValueAtTime(0, t);
  //   gain.gain.linearRampToValueAtTime(vol, t + 0.01);
