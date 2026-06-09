@@ -38,14 +38,14 @@ const Audio = (() => {
     const c = getCtx();
     const t = c.currentTime + startTime;
     
- //   const gain = c.createGain();
-   // osc.connect(gain); gain.connect(c.destination);
+    const gain = c.createGain();
+    osc.connect(gain); gain.connect(c.destination);
    osc.type = type;
-   // osc.frequency.setValueAtTime(freq, t);
- //   gain.gain.setValueAtTime(0, t);
- //   gain.gain.linearRampToValueAtTime(vol, t + 0.01);
-  //  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
-  //  osc.start(t); osc.stop(t + duration + 0.01);
+    osc.frequency.setValueAtTime(freq, t);
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(vol, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+    osc.start(t); osc.stop(t + duration + 0.01);
   }
 
   function noise(duration, vol = 0.06) {
@@ -67,8 +67,8 @@ const Audio = (() => {
   function startAmbient() {}
   }
 
-//  function stopAmbient() {
-//    if (ambientOsc) { try { ambientOsc.stop(); } catch(e) {} ambientOsc = null; }
+  function stopAmbient() {
+   if (ambientOsc) { try { ambientOsc.stop(); } catch(e) {} ambientOsc = null; }
   }
 
   return {
@@ -78,7 +78,7 @@ const Audio = (() => {
       if (v) stopAmbient();
       else startAmbient();
     },
-  //  initAmbient() { startAmbient(); },
+    initAmbient() { startAmbient(); },
     keyType() { beep(660, 'square', 0.06, 0.12); noise(0.03, 0.03); },
     backspace() { beep(330, 'square', 0.06, 0.08); },
     btnClick() { beep(880, 'square', 0.04, 0.12); },
